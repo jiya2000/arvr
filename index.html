@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumière - Augmented Reality Menu</title>
+    
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Import the model-viewer component -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: rgba(30, 30, 30, 0.6);
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --accent-gold: #d4af37;
+            --accent-gold-hover: #f1c40f;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.05), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.05), transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--accent-gold);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+
+        .menu-item h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .price {
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        /* 3D Viewer Styling */
+        .viewer-container {
+            width: 100%;
+            height: 280px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent);
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            --poster-color: transparent;
+        }
+
+        /* Customizing the AR button */
+        model-viewer::part(default-ar-button) {
+            background-color: var(--accent-gold);
+            color: #121212;
+            border-radius: 30px;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            bottom: 16px;
+            right: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        model-viewer::part(default-ar-button):hover {
+            background-color: var(--accent-gold-hover);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            .menu-container {
+                gap: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Lumière</h1>
+        <div class="subtitle">An Augmented Culinary Experience</div>
+    </header>
+
+    <div class="menu-container">
+        
+        <!-- Appetizer -->
+        <div class="menu-item">
+            <div class="menu-item-header">
+                <h2>Iridescent Olives</h2>
+                <span class="price">$14</span>
+            </div>
+            <p class="description">A curated selection of premium Mediterranean olives, served in an artisanal iridescent glass dish. The perfect beginning to your journey.</p>
+            
+            <div class="viewer-container">
+                <model-viewer 
+                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" 
+                    alt="A 3D model of a dish with olives" 
+                    auto-rotate 
+                    rotation-per-second="30deg"
+                    camera-controls 
+                    ar 
+                    shadow-intensity="1.5"
+                    environment-image="neutral">
+                </model-viewer>
+            </div>
+        </div>
+
+        <!-- Side/Salad -->
+        <div class="menu-item">
+            <div class="menu-item-header">
+                <h2>Hass Avocado</h2>
+                <span class="price">$12</span>
+            </div>
+            <p class="description">Perfectly ripe, hand-selected Hass avocado, lightly seasoned with Himalayan pink salt and a drizzle of extra virgin olive oil.</p>
+            
+            <div class="viewer-container">
+                <model-viewer 
+                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" 
+                    alt="A 3D model of an avocado" 
+                    auto-rotate
+                    rotation-per-second="30deg" 
+                    camera-controls 
+                    ar 
+                    shadow-intensity="1"
+                    environment-image="neutral">
+                </model-viewer>
+            </div>
+        </div>
+
+        <!-- Beverage -->
+        <div class="menu-item">
+            <div class="menu-item-header">
+                <h2>Artisan Water</h2>
+                <span class="price">$8</span>
+            </div>
+            <p class="description">Crisp, refreshing artisan sparkling water, served in our signature glass bottle. Naturally filtered and chilled to perfection.</p>
+            
+            <div class="viewer-container">
+                <model-viewer 
+                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" 
+                    alt="A 3D model of a water bottle" 
+                    auto-rotate 
+                    rotation-per-second="30deg"
+                    camera-controls 
+                    ar 
+                    shadow-intensity="1"
+                    environment-image="neutral">
+                </model-viewer>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
