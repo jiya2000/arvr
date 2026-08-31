@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumière - Augmented Reality Menu</title>
     
-    <!-- Google Fonts for premium typography -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -17,10 +17,12 @@
         :root {
             --bg-color: #121212;
             --card-bg: rgba(30, 30, 30, 0.6);
+            --list-bg: rgba(20, 20, 20, 0.4);
             --text-main: #f5f5f5;
             --text-muted: #aaaaaa;
             --accent-gold: #d4af37;
             --accent-gold-hover: #f1c40f;
+            --border-light: rgba(255, 255, 255, 0.05);
         }
 
         body {
@@ -36,41 +38,70 @@
 
         header {
             text-align: center;
-            padding: 60px 20px 40px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            margin-bottom: 40px;
+            padding: 80px 20px 40px;
+            margin-bottom: 20px;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 600;
             margin: 0;
             color: var(--accent-gold);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--text-muted);
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: 300;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        .menu-container {
-            max-width: 1200px;
+        .menu-wrapper {
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 20px 60px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
+            padding: 0 20px 80px;
         }
 
-        .menu-item {
+        .menu-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--text-main);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent-gold);
+        }
+
+        /* Grid for AR Highlight Cards */
+        .ar-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .menu-item-ar {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
             border-radius: 16px;
             padding: 25px;
             backdrop-filter: blur(12px);
@@ -79,52 +110,39 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
-        .menu-item:hover {
+        .menu-item-ar::before {
+            content: 'AR Experience';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-gold);
+            color: #121212;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .menu-item-ar:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 40px rgba(212, 175, 55, 0.15);
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        .menu-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 15px;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-            padding-bottom: 15px;
-        }
-
-        .menu-item h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin: 0;
-            font-weight: 400;
-        }
-
-        .price {
-            font-size: 1.4rem;
-            color: var(--accent-gold);
-            font-weight: 600;
-        }
-
-        .description {
-            color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            flex-grow: 1;
-        }
-
-        /* 3D Viewer Styling */
         .viewer-container {
             width: 100%;
-            height: 280px;
+            height: 260px;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
             background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent);
+            margin-bottom: 20px;
         }
 
         model-viewer {
@@ -134,7 +152,70 @@
             --poster-color: transparent;
         }
 
-        /* Customizing the AR button */
+        /* Standard List Items */
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 15px 20px;
+            background: var(--list-bg);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .menu-list-item:hover {
+            background: rgba(40, 40, 40, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .item-details {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .item-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted rgba(255,255,255,0.2);
+            margin: 0 15px;
+            position: relative;
+            top: -6px;
+        }
+
+        /* Custom AR Button */
         model-viewer::part(default-ar-button) {
             background-color: var(--accent-gold);
             color: #121212;
@@ -154,12 +235,14 @@
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.8rem;
+            h1 { font-size: 3rem; }
+            .menu-list-item {
+                flex-direction: column;
+                align-items: flex-start;
             }
-            .menu-container {
-                gap: 25px;
-            }
+            .dots { display: none; }
+            .price { margin-top: 10px; align-self: flex-end; }
+            .item-details { padding-right: 0; }
         }
     </style>
 </head>
@@ -170,73 +253,196 @@
         <div class="subtitle">An Augmented Culinary Experience</div>
     </header>
 
-    <div class="menu-container">
+    <div class="menu-wrapper">
         
-        <!-- Appetizer -->
-        <div class="menu-item">
-            <div class="menu-item-header">
-                <h2>Iridescent Olives</h2>
-                <span class="price">$14</span>
-            </div>
-            <p class="description">A curated selection of premium Mediterranean olives, served in an artisanal iridescent glass dish. The perfect beginning to your journey.</p>
+        <!-- STARTERS SECTION -->
+        <section class="menu-section">
+            <h2 class="section-title">Starters</h2>
             
-            <div class="viewer-container">
-                <model-viewer 
-                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" 
-                    alt="A 3D model of a dish with olives" 
-                    auto-rotate 
-                    rotation-per-second="30deg"
-                    camera-controls 
-                    ar 
-                    shadow-intensity="1.5"
-                    environment-image="neutral">
-                </model-viewer>
-            </div>
-        </div>
+            <div class="ar-highlights">
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" alt="Dish with olives" auto-rotate rotation-per-second="30deg" camera-controls ar shadow-intensity="1.5" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
+                        <h3 class="item-name">Iridescent Olives</h3>
+                        <div class="dots"></div>
+                        <span class="price">$14</span>
+                    </div>
+                    <p class="item-desc">Premium Mediterranean olives served in an artisanal iridescent glass dish.</p>
+                </div>
 
-        <!-- Side/Salad -->
-        <div class="menu-item">
-            <div class="menu-item-header">
-                <h2>Hass Avocado</h2>
-                <span class="price">$12</span>
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" alt="Avocado" auto-rotate rotation-per-second="30deg" camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
+                        <h3 class="item-name">Hass Avocado Tartare</h3>
+                        <div class="dots"></div>
+                        <span class="price">$18</span>
+                    </div>
+                    <p class="item-desc">Perfectly ripe Hass avocado, seasoned with pink salt and extra virgin olive oil.</p>
+                </div>
             </div>
-            <p class="description">Perfectly ripe, hand-selected Hass avocado, lightly seasoned with Himalayan pink salt and a drizzle of extra virgin olive oil.</p>
-            
-            <div class="viewer-container">
-                <model-viewer 
-                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" 
-                    alt="A 3D model of an avocado" 
-                    auto-rotate
-                    rotation-per-second="30deg" 
-                    camera-controls 
-                    ar 
-                    shadow-intensity="1"
-                    environment-image="neutral">
-                </model-viewer>
-            </div>
-        </div>
 
-        <!-- Beverage -->
-        <div class="menu-item">
-            <div class="menu-item-header">
-                <h2>Artisan Water</h2>
-                <span class="price">$8</span>
+            <div class="menu-list">
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Truffle Arancini</h3>
+                        <p class="item-desc">Crispy risotto spheres stuffed with wild mushrooms and black truffle fondue.</p>
+                    </div>
+                    <span class="price">$16</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Wagyu Beef Carpaccio</h3>
+                        <p class="item-desc">Thinly sliced Wagyu, capers, shaved parmesan, and a lemon emulsion.</p>
+                    </div>
+                    <span class="price">$22</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Burrata & Heirloom Tomato</h3>
+                        <p class="item-desc">Fresh burrata, basil pesto, aged balsamic reduction, and micro-greens.</p>
+                    </div>
+                    <span class="price">$19</span>
+                </div>
             </div>
-            <p class="description">Crisp, refreshing artisan sparkling water, served in our signature glass bottle. Naturally filtered and chilled to perfection.</p>
+        </section>
+
+        <!-- MAIN COURSES SECTION -->
+        <section class="menu-section">
+            <h2 class="section-title">Main Courses</h2>
+            <div class="menu-list">
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Pan-Seared Scallops</h3>
+                        <p class="item-desc">Jumbo sea scallops, cauliflower purée, pancetta crisp, and sage brown butter.</p>
+                    </div>
+                    <span class="price">$34</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Duck Breast à l'Orange</h3>
+                        <p class="item-desc">Roasted duck breast, spiced orange glaze, fondant potatoes, and charred broccolini.</p>
+                    </div>
+                    <span class="price">$38</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Wild Mushroom Risotto</h3>
+                        <p class="item-desc">Arborio rice, porcini broth, shaved black truffle, and 24-month Parmigiano-Reggiano.</p>
+                    </div>
+                    <span class="price">$28</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Chilean Sea Bass</h3>
+                        <p class="item-desc">Miso-glazed sea bass, bok choy, shiitake mushrooms, and yuzu dashi.</p>
+                    </div>
+                    <span class="price">$42</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Prime Ribeye Steak</h3>
+                        <p class="item-desc">14oz bone-in ribeye, truffle mash, roasted asparagus, and red wine jus.</p>
+                    </div>
+                    <span class="price">$55</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Saffron Lobster Linguine</h3>
+                        <p class="item-desc">Fresh handmade linguine, Maine lobster tail, cherry tomatoes, and saffron cream.</p>
+                    </div>
+                    <span class="price">$46</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Roasted Cauliflower Steak (V)</h3>
+                        <p class="item-desc">Harissa-marinated cauliflower, quinoa pilaf, tahini drizzle, and pomegranate seeds.</p>
+                    </div>
+                    <span class="price">$24</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESSERTS SECTION -->
+        <section class="menu-section">
+            <h2 class="section-title">Desserts</h2>
+            <div class="menu-list">
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Dark Chocolate Lava Cake</h3>
+                        <p class="item-desc">Warm molten center, served with Madagascar vanilla bean ice cream.</p>
+                    </div>
+                    <span class="price">$14</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Vanilla Bean Crème Brûlée</h3>
+                        <p class="item-desc">Classic baked custard with a caramelized sugar crust and fresh berries.</p>
+                    </div>
+                    <span class="price">$12</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Pistachio Mille-Feuille</h3>
+                        <p class="item-desc">Layers of delicate puff pastry and rich pistachio mousseline.</p>
+                    </div>
+                    <span class="price">$15</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Artisanal Gelato Selection</h3>
+                        <p class="item-desc">Trio of seasonal flavors made in-house daily. Ask your server.</p>
+                    </div>
+                    <span class="price">$10</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- BEVERAGES SECTION -->
+        <section class="menu-section">
+            <h2 class="section-title">Beverages</h2>
             
-            <div class="viewer-container">
-                <model-viewer 
-                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" 
-                    alt="A 3D model of a water bottle" 
-                    auto-rotate 
-                    rotation-per-second="30deg"
-                    camera-controls 
-                    ar 
-                    shadow-intensity="1"
-                    environment-image="neutral">
-                </model-viewer>
+            <div class="ar-highlights">
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" alt="Water Bottle" auto-rotate rotation-per-second="30deg" camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
+                        <h3 class="item-name">Artisan Sparkling Water</h3>
+                        <div class="dots"></div>
+                        <span class="price">$8</span>
+                    </div>
+                    <p class="item-desc">Crisp, refreshing artisan sparkling water, served in our signature glass bottle.</p>
+                </div>
             </div>
-        </div>
+
+            <div class="menu-list">
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Signature Negroni</h3>
+                        <p class="item-desc">Gin, Campari, Sweet Vermouth, and an orange twist.</p>
+                    </div>
+                    <span class="price">$16</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Aged Bordeaux Reserve</h3>
+                        <p class="item-desc">Full-bodied red with notes of dark cherry and oak. (By the glass)</p>
+                    </div>
+                    <span class="price">$24</span>
+                </div>
+                <div class="menu-list-item">
+                    <div class="item-details">
+                        <h3 class="item-name">Hand-Crafted Espresso</h3>
+                        <p class="item-desc">Locally roasted single-origin espresso beans, pulled to perfection.</p>
+                    </div>
+                    <span class="price">$6</span>
+                </div>
+            </div>
+        </section>
 
     </div>
 
