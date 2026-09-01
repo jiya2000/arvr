@@ -277,6 +277,7 @@
         <button class="tab-btn" data-target="mains">Main Courses</button>
         <button class="tab-btn" data-target="desserts">Desserts</button>
         <button class="tab-btn" data-target="beverages">Beverages</button>
+        <button class="tab-btn" style="border-color: var(--accent-gold); color: var(--accent-gold);" data-target="tour">Virtual Tour ✨</button>
     </nav>
 
     <div class="menu-wrapper">
@@ -527,6 +528,31 @@
                     </div>
                     <p class="item-desc">Locally roasted single-origin espresso beans, pulled to perfection.</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- VIRTUAL TOUR SECTION -->
+        <section class="menu-section" id="tour" style="display: none;">
+            <h2 class="section-title">Explore Lumière</h2>
+            <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; line-height: 1.6;">
+                Take a 3D virtual walk through our beautifully designed dining rooms before you arrive. Get a feel for the ambiance and pick your favorite table!
+            </p>
+            <div style="width: 100%; height: 65vh; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-light); box-shadow: 0 10px 40px rgba(0,0,0,0.5); position: relative; background: var(--card-bg);">
+                <model-viewer 
+                    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+                    skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr" 
+                    alt="3D layout of the hotel" 
+                    auto-rotate 
+                    camera-controls 
+                    shadow-intensity="1" 
+                    style="height: 100%; width: 100%;">
+                    
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(18, 18, 18, 0.85); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--accent-gold); backdrop-filter: blur(10px); width: 85%; max-width: 450px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                        <h3 style="color: var(--accent-gold); margin-top: 0; font-family: 'Playfair Display', serif; font-size: 1.5rem;">Interactive 3D Layout</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.95rem; line-height: 1.5;">This is a placeholder for your actual restaurant layout scan. You can easily replace this with a 3D scan of your interior (e.g., from Polycam, Matterport, or Luma AI) to let customers walk through your space!</p>
+                        <code style="display: block; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); word-break: break-all;">&lt;model-viewer src="your_hotel_scan.glb"&gt;</code>
+                    </div>
+                </model-viewer>
             </div>
         </section>
 
