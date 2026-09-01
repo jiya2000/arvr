@@ -58,7 +58,7 @@ export function renderRestaurantTour(container, onBackToMenu) {
 
                 <!-- Overlay Model Viewer Modal -->
                 <div id="lure-model-modal" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background: rgba(250, 248, 245, 0.95); backdrop-filter: blur(10px);">
-                    <button id="close-model-btn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text);">✕</button>
+                    <button id="close-model-btn" style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.5); border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.5rem; cursor: pointer; color: white; z-index: 100; display: flex; align-items: center; justify-content: center;">✕</button>
                     <model-viewer
                         id="lure-model-viewer"
                         src=""
