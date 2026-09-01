@@ -2,592 +2,150 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumière - Augmented Reality Menu</title>
-    
-    <!-- Google Fonts -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Lumière — Experience Indian cuisine through augmented reality. View dishes in 3D, explore ingredients, and order from our premium menu.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title>Lumière — An Augmented Culinary Experience</title>
+
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Import the model-viewer component -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-    
-    <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: rgba(30, 30, 30, 0.6);
-            --text-main: #f5f5f5;
-            --text-muted: #aaaaaa;
-            --accent-gold: #d4af37;
-            --accent-gold-hover: #f1c40f;
-            --border-light: rgba(255, 255, 255, 0.05);
-        }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at top right, rgba(212, 175, 55, 0.05), transparent 40%),
-                              radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.05), transparent 40%);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        header {
-            text-align: center;
-            padding: 50px 20px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    <!-- Model Viewer (for 3D & AR) -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--accent-gold);
-            letter-spacing: 3px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-top: 10px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-
-        /* QR Code Container */
-        .qr-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .qr-container img {
-            border-radius: 8px;
-            width: 100px;
-            height: 100px;
-        }
-        .qr-text {
-            font-size: 0.85rem;
-            color: var(--text-main);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* Category Tabs Navigation */
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 50px;
-            padding: 0 20px;
-        }
-
-        .tab-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            border: 1px solid var(--border-light);
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
-            font-weight: 400;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .tab-btn:hover {
-            background: rgba(212, 175, 55, 0.15);
-            border-color: rgba(212, 175, 55, 0.3);
-        }
-
-        .tab-btn.active {
-            background: var(--accent-gold);
-            color: #121212;
-            border-color: var(--accent-gold);
-            font-weight: 600;
-        }
-
-        .menu-wrapper {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 20px 80px;
-        }
-
-        .menu-section {
-            margin-bottom: 80px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--text-main);
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 2px;
-            background-color: var(--accent-gold);
-        }
-
-        /* Grid for AR Cards */
-        .ar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .menu-item-ar {
-            background: var(--card-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 16px;
-            padding: 20px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .menu-item-ar:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.15);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .viewer-container {
-            width: 100%;
-            height: 240px;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent);
-            margin-bottom: 20px;
-        }
-
-        model-viewer {
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-            --poster-color: transparent;
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 10px;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-
-        .item-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            margin: 0;
-            color: var(--text-main);
-        }
-
-        .price {
-            font-size: 1.3rem;
-            color: var(--accent-gold);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .item-desc {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin: 0;
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-
-        /* Custom AR Button */
-        model-viewer::part(default-ar-button) {
-            background-color: var(--accent-gold);
-            color: #121212;
-            border-radius: 30px;
-            border: none;
-            padding: 8px 16px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            bottom: 12px;
-            right: 12px;
-            transition: background-color 0.3s ease;
-        }
-
-        model-viewer::part(default-ar-button):hover {
-            background-color: var(--accent-gold-hover);
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
-            .qr-container { display: none; /* Hide QR on mobile since they are already on it */ }
-        }
-    </style>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- ============================================ -->
+    <!-- HEADER                                       -->
+    <!-- ============================================ -->
+    <header class="app-header">
+        <h1 class="logo">LUMIÈRE</h1>
+        <p class="tagline">An Augmented Culinary Experience</p>
 
-    <header>
-        <h1>Lumière</h1>
-        <div class="subtitle">An Augmented Culinary Experience</div>
-        <div class="qr-container">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jiya2000.github.io/arvr/" alt="Scan to open on mobile">
-            <span class="qr-text">Scan for Mobile AR</span>
+        <!-- QR Code (Desktop only) -->
+        <div class="qr-section">
+            <div class="qr-card">
+                <img
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jiya2000.github.io/arvr/&bgcolor=ffffff&color=0a0a0a&margin=10"
+                    alt="Scan to open AR menu"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                >
+                <div class="qr-info">
+                    <div class="qr-title">📱 Scan for AR Experience</div>
+                    <div class="qr-desc">Open this menu on your phone to explore dishes in augmented reality</div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Category Tabs -->
-    <nav class="category-tabs">
-        <button class="tab-btn active" data-target="all">All Menu</button>
-        <button class="tab-btn" data-target="starters">Starters</button>
-        <button class="tab-btn" data-target="mains">Main Courses</button>
-        <button class="tab-btn" data-target="desserts">Desserts</button>
-        <button class="tab-btn" data-target="beverages">Beverages</button>
-        <button class="tab-btn" style="border-color: var(--accent-gold); color: var(--accent-gold);" data-target="tour">Virtual Tour ✨</button>
+    <!-- ============================================ -->
+    <!-- NAVIGATION TABS                              -->
+    <!-- ============================================ -->
+    <nav class="nav-tabs" role="tablist" aria-label="Menu navigation">
+        <button class="tab-btn active" data-view="all" role="tab" aria-selected="true" id="tab-all">
+            🍽️ All
+        </button>
+        <button class="tab-btn" data-view="cat-starters" role="tab" id="tab-starters">
+            🥘 Starters
+        </button>
+        <button class="tab-btn" data-view="cat-mains" role="tab" id="tab-mains">
+            🍛 Mains
+        </button>
+        <button class="tab-btn" data-view="cat-desserts" role="tab" id="tab-desserts">
+            🍨 Desserts
+        </button>
+        <button class="tab-btn" data-view="cat-beverages" role="tab" id="tab-beverages">
+            🥤 Drinks
+        </button>
+        <button class="tab-btn special" data-view="recommend" role="tab" id="tab-recommend">
+            ✨ For You
+        </button>
+        <button class="tab-btn special" data-view="restaurant" role="tab" id="tab-restaurant">
+            🏛️ Restaurant
+        </button>
     </nav>
 
-    <div class="menu-wrapper">
-        
-        <!-- STARTERS SECTION -->
-        <section class="menu-section" id="starters">
-            <h2 class="section-title">Starters</h2>
-            <div class="ar-grid">
-                <!-- 1 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Olives" auto-rotate camera-controls ar shadow-intensity="1.5" environment-image="neutral"></model-viewer>
+    <!-- ============================================ -->
+    <!-- VIEW: Menu                                   -->
+    <!-- ============================================ -->
+    <section class="view-section active" id="view-menu">
+        <div class="container">
+            <div class="section-header" id="menu-header">
+                <h2 class="section-title">Full Menu</h2>
+                <p class="section-subtitle">Our complete culinary collection</p>
+            </div>
+
+            <div class="menu-grid" id="menu-grid">
+                <!-- Loading skeletons -->
+                <div class="menu-card">
+                    <div class="card-viewer skeleton" style="height:220px"></div>
+                    <div class="card-body">
+                        <div class="skeleton" style="height:20px;width:60%;margin-bottom:12px"></div>
+                        <div class="skeleton" style="height:14px;width:90%;margin-bottom:8px"></div>
+                        <div class="skeleton" style="height:14px;width:70%"></div>
                     </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Iridescent Olives</h3>
-                        <span class="price">$14</span>
-                    </div>
-                    <p class="item-desc">Premium Mediterranean olives served in an artisanal iridescent glass dish.</p>
                 </div>
-                <!-- 2 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Avocado" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                <div class="menu-card">
+                    <div class="card-viewer skeleton" style="height:220px"></div>
+                    <div class="card-body">
+                        <div class="skeleton" style="height:20px;width:60%;margin-bottom:12px"></div>
+                        <div class="skeleton" style="height:14px;width:90%;margin-bottom:8px"></div>
+                        <div class="skeleton" style="height:14px;width:70%"></div>
                     </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Hass Avocado Tartare</h3>
-                        <span class="price">$18</span>
-                    </div>
-                    <p class="item-desc">Perfectly ripe Hass avocado, seasoned with pink salt and extra virgin olive oil.</p>
                 </div>
-                <!-- 3 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <!-- Shishkebab used for Arancini approximation -->
-                        <model-viewer src="https://modelviewer.dev/shared-assets/models/shishkebab.glb" loading="lazy" alt="Truffle Arancini" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                <div class="menu-card">
+                    <div class="card-viewer skeleton" style="height:220px"></div>
+                    <div class="card-body">
+                        <div class="skeleton" style="height:20px;width:60%;margin-bottom:12px"></div>
+                        <div class="skeleton" style="height:14px;width:90%;margin-bottom:8px"></div>
+                        <div class="skeleton" style="height:14px;width:70%"></div>
                     </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Truffle Arancini</h3>
-                        <span class="price">$16</span>
-                    </div>
-                    <p class="item-desc">Crispy risotto spheres stuffed with wild mushrooms and black truffle fondue.</p>
-                </div>
-                <!-- 4 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Carpaccio" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Wagyu Beef Carpaccio</h3>
-                        <span class="price">$22</span>
-                    </div>
-                    <p class="item-desc">Thinly sliced Wagyu, capers, shaved parmesan, and a lemon emulsion.</p>
-                </div>
-                <!-- 5 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Burrata" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Burrata & Heirloom Tomato</h3>
-                        <span class="price">$19</span>
-                    </div>
-                    <p class="item-desc">Fresh burrata, basil pesto, aged balsamic reduction, and micro-greens.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- MAIN COURSES SECTION -->
-        <section class="menu-section" id="mains">
-            <h2 class="section-title">Main Courses</h2>
-            <div class="ar-grid">
-                <!-- 6 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Scallops" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Pan-Seared Scallops</h3>
-                        <span class="price">$34</span>
-                    </div>
-                    <p class="item-desc">Jumbo sea scallops, cauliflower purée, pancetta crisp, and sage brown butter.</p>
-                </div>
-                <!-- 7 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://modelviewer.dev/shared-assets/models/shishkebab.glb" loading="lazy" alt="Duck" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Duck Breast à l'Orange</h3>
-                        <span class="price">$38</span>
-                    </div>
-                    <p class="item-desc">Roasted duck breast, spiced orange glaze, fondant potatoes, and charred broccolini.</p>
-                </div>
-                <!-- 8 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Risotto" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Wild Mushroom Risotto</h3>
-                        <span class="price">$28</span>
-                    </div>
-                    <p class="item-desc">Arborio rice, porcini broth, shaved black truffle, and 24-month Parmigiano-Reggiano.</p>
-                </div>
-                <!-- 9 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Sea Bass" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Chilean Sea Bass</h3>
-                        <span class="price">$42</span>
-                    </div>
-                    <p class="item-desc">Miso-glazed sea bass, bok choy, shiitake mushrooms, and yuzu dashi.</p>
-                </div>
-                <!-- 10 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://modelviewer.dev/shared-assets/models/shishkebab.glb" loading="lazy" alt="Ribeye" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Prime Ribeye Steak</h3>
-                        <span class="price">$55</span>
-                    </div>
-                    <p class="item-desc">14oz bone-in ribeye, truffle mash, roasted asparagus, and red wine jus.</p>
-                </div>
-                <!-- 11 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Lobster Linguine" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Saffron Lobster Linguine</h3>
-                        <span class="price">$46</span>
-                    </div>
-                    <p class="item-desc">Fresh handmade linguine, Maine lobster tail, cherry tomatoes, and saffron cream.</p>
-                </div>
-                <!-- 12 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Cauliflower" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Roasted Cauliflower Steak (V)</h3>
-                        <span class="price">$24</span>
-                    </div>
-                    <p class="item-desc">Harissa-marinated cauliflower, quinoa pilaf, tahini drizzle, and pomegranate seeds.</p>
-                </div>
-            </div>
-        </section>
+    <!-- ============================================ -->
+    <!-- VIEW: Smart Recommendations                  -->
+    <!-- ============================================ -->
+    <section class="view-section" id="view-recommend"></section>
 
-        <!-- DESSERTS SECTION -->
-        <section class="menu-section" id="desserts">
-            <h2 class="section-title">Desserts</h2>
-            <div class="ar-grid">
-                <!-- 13 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Lava Cake" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Dark Chocolate Lava Cake</h3>
-                        <span class="price">$14</span>
-                    </div>
-                    <p class="item-desc">Warm molten center, served with Madagascar vanilla bean ice cream.</p>
-                </div>
-                <!-- 14 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Creme Brulee" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Vanilla Bean Crème Brûlée</h3>
-                        <span class="price">$12</span>
-                    </div>
-                    <p class="item-desc">Classic baked custard with a caramelized sugar crust and fresh berries.</p>
-                </div>
-                <!-- 15 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" loading="lazy" alt="Mille-Feuille" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Pistachio Mille-Feuille</h3>
-                        <span class="price">$15</span>
-                    </div>
-                    <p class="item-desc">Layers of delicate puff pastry and rich pistachio mousseline.</p>
-                </div>
-                <!-- 16 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Gelato" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Artisanal Gelato Selection</h3>
-                        <span class="price">$10</span>
-                    </div>
-                    <p class="item-desc">Trio of seasonal flavors made in-house daily. Ask your server.</p>
-                </div>
-            </div>
-        </section>
+    <!-- ============================================ -->
+    <!-- VIEW: Restaurant & Tour                      -->
+    <!-- ============================================ -->
+    <section class="view-section" id="view-restaurant"></section>
 
-        <!-- BEVERAGES SECTION -->
-        <section class="menu-section" id="beverages">
-            <h2 class="section-title">Beverages</h2>
-            <div class="ar-grid">
-                <!-- 17 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Water Bottle" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Artisan Sparkling Water</h3>
-                        <span class="price">$8</span>
-                    </div>
-                    <p class="item-desc">Crisp, refreshing artisan sparkling water, served in our signature glass bottle.</p>
-                </div>
-                <!-- 18 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Negroni" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Signature Negroni</h3>
-                        <span class="price">$16</span>
-                    </div>
-                    <p class="item-desc">Gin, Campari, Sweet Vermouth, and an orange twist.</p>
-                </div>
-                <!-- 19 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Bordeaux" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Aged Bordeaux Reserve</h3>
-                        <span class="price">$24</span>
-                    </div>
-                    <p class="item-desc">Full-bodied red with notes of dark cherry and oak. (By the glass)</p>
-                </div>
-                <!-- 20 -->
-                <div class="menu-item-ar">
-                    <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Espresso" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
-                    </div>
-                    <div class="item-header">
-                        <h3 class="item-name">Hand-Crafted Espresso</h3>
-                        <span class="price">$6</span>
-                    </div>
-                    <p class="item-desc">Locally roasted single-origin espresso beans, pulled to perfection.</p>
-                </div>
-            </div>
-        </section>
+    <!-- ============================================ -->
+    <!-- FOOTER                                       -->
+    <!-- ============================================ -->
+    <footer class="app-footer">
+        <div class="footer-brand">LUMIÈRE</div>
+        <p class="footer-text">
+            An AR-enhanced restaurant experience prototype
+        </p>
+        <p class="footer-text" style="margin-top:8px">
+            Built with
+            <a href="https://modelviewer.dev" target="_blank" rel="noopener">&lt;model-viewer&gt;</a>
+            •
+            <a href="https://immersiveweb.dev" target="_blank" rel="noopener">WebXR</a>
+        </p>
+        <span class="prototype-badge">🧪 Prototype • Academic Project • No real transactions</span>
+    </footer>
 
-        <!-- VIRTUAL TOUR SECTION -->
-        <section class="menu-section" id="tour" style="display: none;">
-            <h2 class="section-title">Explore Lumière</h2>
-            <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; line-height: 1.6;">
-                Take a 3D virtual walk through our beautifully designed dining rooms before you arrive. Get a feel for the ambiance and pick your favorite table!
-            </p>
-            <div style="width: 100%; height: 65vh; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-light); box-shadow: 0 10px 40px rgba(0,0,0,0.5); position: relative; background: var(--card-bg);">
-                <model-viewer 
-                    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
-                    skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr" 
-                    alt="3D layout of the hotel" 
-                    auto-rotate 
-                    camera-controls 
-                    shadow-intensity="1" 
-                    style="height: 100%; width: 100%;">
-                    
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(18, 18, 18, 0.85); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid var(--accent-gold); backdrop-filter: blur(10px); width: 85%; max-width: 450px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-                        <h3 style="color: var(--accent-gold); margin-top: 0; font-family: 'Playfair Display', serif; font-size: 1.5rem;">Interactive 3D Layout</h3>
-                        <p style="margin-bottom: 20px; font-size: 0.95rem; line-height: 1.5;">This is a placeholder for your actual restaurant layout scan. You can easily replace this with a 3D scan of your interior (e.g., from Polycam, Matterport, or Luma AI) to let customers walk through your space!</p>
-                        <code style="display: block; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); word-break: break-all;">&lt;model-viewer src="your_hotel_scan.glb"&gt;</code>
-                    </div>
-                </model-viewer>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- Script for Tab Filtering -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const sections = document.querySelectorAll('.menu-section');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // Update active tab
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-
-                    // Filter sections
-                    const target = tab.getAttribute('data-target');
-                    
-                    sections.forEach(section => {
-                        if (target === 'all' || section.id === target) {
-                            section.style.display = 'block';
-                            // Add slight animation
-                            section.style.animation = 'none';
-                            section.offsetHeight; /* trigger reflow */
-                            section.style.animation = 'fadeIn 0.5s ease forwards';
-                        } else {
-                            section.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-
+    <!-- ============================================ -->
+    <!-- App Module                                   -->
+    <!-- ============================================ -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
