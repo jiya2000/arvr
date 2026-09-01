@@ -1,421 +1,360 @@
 // ============================================
-// Lumière — Cart & Customization Module
+// Lumière — Cart & Customization
 // ============================================
 
 import { CONFIG } from './config.js';
 
-class Cart {
-    constructor() {
-        this.items = [];
-        this.listeners = [];
-        this._load();
-    }
-
-    _load() {
+// --- State ---
+export const cart = {
+    items: [],
+    load() {
         try {
             const saved = sessionStorage.getItem('lumiere-cart');
             if (saved) this.items = JSON.parse(saved);
         } catch (e) { /* ignore */ }
-    }
-
-    _save() {
-        try {
-            sessionStorage.setItem('lumiere-cart', JSON.stringify(this.items));
-        } catch (e) { /* ignore */ }
-        this._notify();
-    }
-
-    _notify() {
-        this.listeners.forEach(fn => fn(this.items, this.getTotal()));
-    }
-
-    onChange(fn) {
-        this.listeners.push(fn);
-    }
-
-    addItem(dish, options = {}) {
-        const cartItem = {
-            id: Date.now().toString(36),
-            dishId: dish.id,
-            name: dish.name,
-            basePrice: dish.price,
-            spiceLevel: options.spiceLevel || 'medium',
-            portion: options.portion || 'regular',
-            addons: options.addons || [],
-            quantity: 1,
-        };
-        cartItem.totalPrice = this._calcItemPrice(cartItem, dish);
-        this.items.push(cartItem);
-        this._save();
-        return cartItem;
-    }
-
-    removeItem(cartItemId) {
-        this.items = this.items.filter(i => i.id !== cartItemId);
-        this._save();
-    }
-
-    _calcItemPrice(cartItem, dish) {
-        let price = cartItem.basePrice;
-        if (cartItem.portion === 'large') price += Math.round(price * 0.4);
-        if (dish && dish.addons) {
-            cartItem.addons.forEach(addonName => {
-                const addon = dish.addons.find(a => a.name === addonName);
-                if (addon) price += addon.price;
-            });
-        }
-        return price;
-    }
-
-    getTotal() {
-        return this.items.reduce((sum, item) => sum + item.totalPrice, 0);
-    }
-
-    getCount() {
-        return this.items.length;
-    }
-
-    getItems() {
-        return [...this.items];
-    }
-
+    },
+    save() {
+        sessionStorage.setItem('lumiere-cart', JSON.stringify(this.items));
+    },
+    add(item) {
+        this.items.push(item);
+        this.save();
+        updateCartBadge();
+    },
+    remove(index) {
+        this.items.splice(index, 1);
+        this.save();
+        updateCartBadge();
+    },
     clear() {
         this.items = [];
-        this._save();
+        this.save();
+        updateCartBadge();
+    },
+    get total() {
+        return this.items.reduce((sum, i) => sum + i.totalPrice, 0);
     }
+};
+
+// --- Init ---
+export function initCartUI() {
+    cart.load();
+    injectCartElements();
+    updateCartBadge();
 }
 
-// Singleton
-export const cart = new Cart();
-
-// --- Cart UI ---
-export function initCartUI() {
-    // Create cart FAB
+function injectCartElements() {
+    // Cart FAB
     const fab = document.createElement('button');
     fab.className = 'cart-fab';
     fab.id = 'cart-fab';
-    fab.setAttribute('aria-label', 'Open cart');
-    fab.innerHTML = `🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span>`;
+    fab.innerHTML = '🛒<span class="cart-badge" id="cart-badge" style="display:none">0</span>';
+    fab.addEventListener('click', openCart);
     document.body.appendChild(fab);
 
-    // Create cart overlay
+    // Cart overlay + panel
     const overlay = document.createElement('div');
     overlay.className = 'cart-overlay';
     overlay.id = 'cart-overlay';
+    overlay.addEventListener('click', closeCart);
     document.body.appendChild(overlay);
 
-    // Create cart panel
     const panel = document.createElement('div');
     panel.className = 'cart-panel';
     panel.id = 'cart-panel';
     panel.innerHTML = `
         <div class="cart-header">
-            <h2 class="cart-title">Your Order</h2>
-            <button class="modal-close" id="cart-close" aria-label="Close cart">✕</button>
+            <h3 class="cart-title">Your order</h3>
+            <button id="cart-close" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-secondary)">✕</button>
         </div>
         <div class="cart-items" id="cart-items"></div>
-        <div class="cart-footer" id="cart-footer">
-            <div class="cart-total">
-                <span>Total</span>
-                <span class="cart-total-price" id="cart-total">${CONFIG.restaurant.currency}0</span>
-            </div>
-            <button class="btn-primary" style="width:100%" id="cart-checkout">
-                Place Order (Demo)
-            </button>
-            <p style="font-size:0.7rem; color:var(--text-muted); text-align:center; margin-top:8px;">
-                This is a prototype — no real order will be placed
-            </p>
-        </div>
+        <div class="cart-footer" id="cart-footer"></div>
     `;
     document.body.appendChild(panel);
 
-    // Event listeners
-    fab.addEventListener('click', () => toggleCart(true));
-    overlay.addEventListener('click', () => toggleCart(false));
-    document.getElementById('cart-close').addEventListener('click', () => toggleCart(false));
-    document.getElementById('cart-checkout').addEventListener('click', () => {
-        showToast('✅ Order placed successfully! (Demo)');
-        cart.clear();
-        toggleCart(false);
-    });
+    document.getElementById('cart-close').addEventListener('click', closeCart);
 
-    // Listen for cart changes
-    cart.onChange((items, total) => {
-        renderCartItems(items, total);
-        updateBadge(items.length);
+    // Modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    modalOverlay.id = 'modal-overlay';
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
     });
+    modalOverlay.innerHTML = '<div class="modal" id="modal-content"></div>';
+    document.body.appendChild(modalOverlay);
 
-    // Initial render
-    renderCartItems(cart.getItems(), cart.getTotal());
-    updateBadge(cart.getCount());
+    // Toast
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.id = 'toast';
+    document.body.appendChild(toast);
 }
 
-function toggleCart(open) {
-    document.getElementById('cart-panel').classList.toggle('open', open);
-    document.getElementById('cart-overlay').classList.toggle('open', open);
-    document.body.style.overflow = open ? 'hidden' : '';
+function openCart() {
+    document.getElementById('cart-overlay').classList.add('open');
+    document.getElementById('cart-panel').classList.add('open');
+    renderCartItems();
 }
 
-function updateBadge(count) {
+function closeCart() {
+    document.getElementById('cart-overlay').classList.remove('open');
+    document.getElementById('cart-panel').classList.remove('open');
+}
+
+function updateCartBadge() {
     const badge = document.getElementById('cart-badge');
-    if (count > 0) {
-        badge.style.display = 'flex';
-        badge.textContent = count;
-    } else {
-        badge.style.display = 'none';
-    }
+    if (!badge) return;
+    const count = cart.items.length;
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
 }
 
-function renderCartItems(items, total) {
+function renderCartItems() {
     const container = document.getElementById('cart-items');
     const footer = document.getElementById('cart-footer');
 
-    if (items.length === 0) {
-        container.innerHTML = `
-            <div class="cart-empty">
-                <div class="cart-empty-icon">🛒</div>
-                <p>Your cart is empty</p>
-                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;">
-                    Browse the menu and add dishes to get started
-                </p>
-            </div>
-        `;
-        footer.style.display = 'none';
+    if (cart.items.length === 0) {
+        container.innerHTML = '<div class="cart-empty">Your order is empty</div>';
+        footer.innerHTML = '';
         return;
     }
 
-    footer.style.display = 'block';
-    container.innerHTML = items.map(item => `
-        <div class="cart-item">
-            <div class="cart-item-info">
-                <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-details">
-                    ${item.spiceLevel !== 'medium' ? `🌶️ ${item.spiceLevel}` : ''}
-                    ${item.portion === 'large' ? '• Large' : ''}
-                    ${item.addons.length > 0 ? `• +${item.addons.length} add-on${item.addons.length > 1 ? 's' : ''}` : ''}
+    container.innerHTML = cart.items.map((item, i) => {
+        const details = [];
+        if (item.spice && item.spice !== 'medium') details.push(item.spice);
+        if (item.portion === 'large') details.push('Large');
+        if (item.addons?.length) details.push(item.addons.join(', '));
+
+        return `
+            <div class="cart-item">
+                <div>
+                    <div class="cart-item__name">${item.name}</div>
+                    ${details.length ? `<div class="cart-item__details">${details.join(' · ')}</div>` : ''}
+                </div>
+                <div style="display:flex;align-items:center">
+                    <span class="cart-item__price">${CONFIG.restaurant.currency}${item.totalPrice}</span>
+                    <button class="cart-item__remove" data-index="${i}">✕</button>
                 </div>
             </div>
-            <span class="cart-item-price">${CONFIG.restaurant.currency}${item.totalPrice}</span>
-            <button class="cart-item-remove" data-id="${item.id}" aria-label="Remove ${item.name}">✕</button>
+        `;
+    }).join('');
+
+    footer.innerHTML = `
+        <div class="cart-total">
+            <span>Total</span>
+            <span>${CONFIG.restaurant.currency}${cart.total}</span>
         </div>
-    `).join('');
+        <button class="btn btn--primary btn--full" id="checkout-btn">Place order (demo)</button>
+        <button class="btn btn--ghost btn--full" id="clear-cart-btn" style="margin-top:8px">Clear order</button>
+    `;
 
-    document.getElementById('cart-total').textContent = `${CONFIG.restaurant.currency}${total}`;
+    // Remove buttons
+    container.querySelectorAll('.cart-item__remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+            cart.remove(parseInt(btn.dataset.index));
+            renderCartItems();
+        });
+    });
 
-    // Attach remove handlers
-    container.querySelectorAll('.cart-item-remove').forEach(btn => {
-        btn.addEventListener('click', () => cart.removeItem(btn.dataset.id));
+    // Checkout
+    document.getElementById('checkout-btn')?.addEventListener('click', () => {
+        showToast('Order placed (demo)');
+        cart.clear();
+        renderCartItems();
+        setTimeout(closeCart, 1000);
+    });
+
+    // Clear
+    document.getElementById('clear-cart-btn')?.addEventListener('click', () => {
+        cart.clear();
+        renderCartItems();
     });
 }
 
-// --- Customization Modal ---
+// --- Customize Modal ---
 export function showCustomizeModal(dish) {
-    // Remove existing modal if any
-    const existing = document.getElementById('customize-modal');
-    if (existing) existing.remove();
+    const modal = document.getElementById('modal-content');
+    const overlay = document.getElementById('modal-overlay');
 
-    let selectedSpice = dish.spiceLevel || 'medium';
+    let selectedSpice = 'medium';
     let selectedPortion = 'regular';
-    let selectedAddons = [];
+    const selectedAddons = new Set();
 
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay active';
-    overlay.id = 'customize-modal';
-    overlay.innerHTML = `
-        <div class="modal-content dish-detail" style="position:relative">
-            <button class="modal-close" aria-label="Close">✕</button>
+    const hasModel = !!dish.modelUrl;
 
-            ${dish.modelUrl ? `
-                <div class="dish-detail-viewer">
-                    <model-viewer
-                        src="${dish.modelUrl}"
-                        alt="${dish.name}"
-                        auto-rotate
-                        camera-controls
-                        ar
-                        shadow-intensity="1.5"
-                        environment-image="neutral"
-                        loading="lazy"
-                        style="width:100%;height:100%;background:transparent;"
-                    ></model-viewer>
-                </div>
-            ` : `
-                <div class="dish-detail-viewer" style="display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:5rem">${getCategoryEmoji(dish.category)}</span>
-                </div>
-            `}
-
-            <h2 class="dish-detail-name">${dish.name}</h2>
-            <div class="dish-detail-price" id="customize-price">${CONFIG.restaurant.currency}${dish.price}</div>
-
-            <div class="card-badges" style="margin-bottom:16px">
-                <span class="badge badge-${dish.dietary === 'veg' ? 'veg' : 'non-veg'}">
-                    ${dish.dietary === 'veg' ? '🟢 Vegetarian' : '🔴 Non-Veg'}
-                </span>
-                <span class="badge badge-spice ${dish.spiceLevel === 'hot' ? 'hot' : ''}">
-                    🌶️ ${dish.spiceLevel.charAt(0).toUpperCase() + dish.spiceLevel.slice(1)}
-                </span>
-                <span class="badge badge-time">⏱ ${dish.prepTime} min</span>
-                <span class="badge badge-cal">🔥 ${dish.calories} kcal</span>
+    modal.innerHTML = `
+        ${hasModel ? `
+            <div class="modal__viewer">
+                <model-viewer
+                    src="${dish.modelUrl}"
+                    alt="${dish.name}"
+                    auto-rotate camera-controls
+                    shadow-intensity="0.8"
+                    environment-image="neutral"
+                    loading="lazy"
+                ></model-viewer>
             </div>
+        ` : ''}
+        <button class="modal__close" id="modal-close-btn">✕</button>
+        <div class="modal__body">
+            <h2 class="modal__name">${dish.name}</h2>
+            <p class="modal__price">${CONFIG.restaurant.currency}${dish.price}</p>
+            <p class="modal__desc">${dish.description}</p>
 
-            <p class="dish-detail-desc">${dish.description}</p>
+            <div class="modal__badges">
+                <span class="modal__badge">${dish.dietary === 'veg' ? 'Vegetarian' : 'Non-vegetarian'}</span>
+                <span class="modal__badge">${dish.calories} kcal</span>
+                <span class="modal__badge">${dish.prepTime} min</span>
+            </div>
 
             ${dish.chefNote ? `
                 <div class="chef-note">
-                    <div class="chef-note-header">👨‍🍳 Chef's Note</div>
-                    <p class="chef-note-text">"${dish.chefNote}"</p>
+                    <div class="chef-note__label">Chef's note</div>
+                    <p class="chef-note__text">${dish.chefNote}</p>
                 </div>
             ` : ''}
 
-            ${dish.allergens && dish.allergens.length > 0 ? `
-                <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">
-                    ⚠️ Allergens: ${dish.allergens.join(', ')}
-                </p>
-            ` : ''}
-
-            <h3 class="ingredients-title">Explore Ingredients</h3>
-            <div class="ingredients-grid">
-                ${dish.ingredients.map(ing => `
-                    <div class="ingredient-chip" onclick="this.classList.toggle('expanded')">
-                        <span class="icon">${ing.icon}</span>
-                        <div>
-                            <div>${ing.name}</div>
-                            <div class="ingredient-detail">${ing.detail}</div>
-                        </div>
+            ${dish.ingredients?.length ? `
+                <div class="ingredients">
+                    <h4 class="ingredients__title">Ingredients</h4>
+                    <div class="ingredients__list">
+                        ${dish.ingredients.map(ing => `
+                            <span class="ingredient" data-detail="${ing.detail || ''}">${ing.name}</span>
+                        `).join('')}
                     </div>
-                `).join('')}
-            </div>
+                </div>
+            ` : ''}
 
-            <div class="customize-section">
-                <div class="customize-title">Spice Level</div>
-                <div class="option-group" id="spice-options">
-                    <button class="option-btn ${selectedSpice === 'mild' ? 'selected' : ''}" data-value="mild">🌶️ Mild</button>
-                    <button class="option-btn ${selectedSpice === 'medium' ? 'selected' : ''}" data-value="medium">🌶️🌶️ Medium</button>
-                    <button class="option-btn ${selectedSpice === 'hot' ? 'selected' : ''}" data-value="hot">🌶️🌶️🌶️ Hot</button>
+            <div class="customize" style="margin-bottom:20px">
+                <p class="customize__label">Spice level</p>
+                <div class="customize__options" id="spice-options">
+                    <button class="option-btn" data-val="mild">Mild</button>
+                    <button class="option-btn selected" data-val="medium">Medium</button>
+                    <button class="option-btn" data-val="hot">Hot</button>
                 </div>
             </div>
 
-            <div class="customize-section">
-                <div class="customize-title">Portion Size</div>
-                <div class="option-group" id="portion-options">
-                    <button class="option-btn selected" data-value="regular">Regular</button>
-                    <button class="option-btn" data-value="large">Large (+40%)</button>
+            <div class="customize" style="margin-bottom:20px">
+                <p class="customize__label">Portion</p>
+                <div class="customize__options" id="portion-options">
+                    <button class="option-btn selected" data-val="regular">Regular</button>
+                    <button class="option-btn" data-val="large">Large (+40%)</button>
                 </div>
             </div>
 
-            ${dish.addons && dish.addons.length > 0 ? `
-                <div class="customize-section">
-                    <div class="customize-title">Add-ons</div>
-                    ${dish.addons.map(addon => `
-                        <div class="addon-item">
-                            <span class="addon-name">${addon.name}</span>
-                            <div class="addon-right">
-                                <span class="addon-price">+${CONFIG.restaurant.currency}${addon.price}</span>
-                                <div class="addon-toggle" data-addon="${addon.name}" data-price="${addon.price}"></div>
+            ${dish.addons?.length ? `
+                <div class="customize" style="margin-bottom:24px">
+                    <p class="customize__label">Add-ons</p>
+                    ${dish.addons.map(a => `
+                        <div class="addon-row">
+                            <span>${a.name}</span>
+                            <div class="addon-row__right">
+                                <span class="addon-row__price">+${CONFIG.restaurant.currency}${a.price}</span>
+                                <button class="toggle" data-addon="${a.name}" data-price="${a.price}"></button>
                             </div>
                         </div>
                     `).join('')}
                 </div>
             ` : ''}
 
-            <div style="display:flex;gap:8px;margin-top:24px">
-                <button class="btn-primary" style="flex:1" id="add-to-cart-btn">
-                    🛒 Add to Cart — <span id="final-price">${CONFIG.restaurant.currency}${dish.price}</span>
-                </button>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);margin-top:8px">
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Total</div>
+                    <div id="modal-total" style="font-size:1.2rem;font-weight:500">${CONFIG.restaurant.currency}${dish.price}</div>
+                </div>
+                <button class="btn btn--primary" id="add-to-cart-btn">Add to order</button>
             </div>
         </div>
     `;
 
-    document.body.appendChild(overlay);
-    document.body.style.overflow = 'hidden';
+    overlay.classList.add('active');
 
-    // Close button
-    overlay.querySelector('.modal-close').addEventListener('click', () => closeCustomizeModal(overlay));
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeCustomizeModal(overlay);
+    // Close
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+
+    // Ingredient expand
+    modal.querySelectorAll('.ingredient').forEach(el => {
+        el.addEventListener('click', () => el.classList.toggle('expanded'));
     });
 
-    // Spice level
-    overlay.querySelectorAll('#spice-options .option-btn').forEach(btn => {
+    // Spice
+    modal.querySelectorAll('#spice-options .option-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            overlay.querySelectorAll('#spice-options .option-btn').forEach(b => b.classList.remove('selected'));
+            modal.querySelectorAll('#spice-options .option-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            selectedSpice = btn.dataset.value;
+            selectedSpice = btn.dataset.val;
         });
     });
 
     // Portion
-    overlay.querySelectorAll('#portion-options .option-btn').forEach(btn => {
+    modal.querySelectorAll('#portion-options .option-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            overlay.querySelectorAll('#portion-options .option-btn').forEach(b => b.classList.remove('selected'));
+            modal.querySelectorAll('#portion-options .option-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            selectedPortion = btn.dataset.value;
-            updatePrice();
+            selectedPortion = btn.dataset.val;
+            updateTotal();
         });
     });
 
     // Addons
-    overlay.querySelectorAll('.addon-toggle').forEach(toggle => {
+    modal.querySelectorAll('.toggle').forEach(toggle => {
         toggle.addEventListener('click', () => {
             toggle.classList.toggle('active');
-            const name = toggle.dataset.addon;
+            const addon = toggle.dataset.addon;
             if (toggle.classList.contains('active')) {
-                selectedAddons.push(name);
+                selectedAddons.add(addon);
             } else {
-                selectedAddons = selectedAddons.filter(a => a !== name);
+                selectedAddons.delete(addon);
             }
-            updatePrice();
+            updateTotal();
         });
     });
 
-    // Update price display
-    function updatePrice() {
+    function updateTotal() {
         let price = dish.price;
-        if (selectedPortion === 'large') price += Math.round(price * 0.4);
-        selectedAddons.forEach(name => {
-            const addon = dish.addons?.find(a => a.name === name);
-            if (addon) price += addon.price;
+        if (selectedPortion === 'large') price = Math.round(price * 1.4);
+        modal.querySelectorAll('.toggle.active').forEach(t => {
+            price += parseInt(t.dataset.price);
         });
-        const priceStr = `${CONFIG.restaurant.currency}${price}`;
-        document.getElementById('customize-price').textContent = priceStr;
-        document.getElementById('final-price').textContent = priceStr;
+        document.getElementById('modal-total').textContent = `${CONFIG.restaurant.currency}${price}`;
     }
 
     // Add to cart
     document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-        cart.addItem(dish, {
-            spiceLevel: selectedSpice,
-            portion: selectedPortion,
-            addons: [...selectedAddons],
+        let price = dish.price;
+        if (selectedPortion === 'large') price = Math.round(price * 1.4);
+        const addonNames = [];
+        modal.querySelectorAll('.toggle.active').forEach(t => {
+            price += parseInt(t.dataset.price);
+            addonNames.push(t.dataset.addon);
         });
-        closeCustomizeModal(overlay);
-        showToast(`✅ ${dish.name} added to cart!`);
+
+        cart.add({
+            id: dish.id,
+            name: dish.name,
+            spice: selectedSpice,
+            portion: selectedPortion,
+            addons: addonNames,
+            totalPrice: price
+        });
+
+        closeModal();
+        showToast(`${dish.name} added to your order`);
     });
 }
 
-function closeCustomizeModal(overlay) {
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    setTimeout(() => overlay.remove(), 350);
-}
-
-function getCategoryEmoji(category) {
-    const emojis = { starters: '🥘', mains: '🍛', desserts: '🍨', beverages: '🥤' };
-    return emojis[category] || '🍽️';
+function closeModal() {
+    document.getElementById('modal-overlay')?.classList.remove('active');
 }
 
 // --- Toast ---
-export function showToast(message, duration = 3000) {
-    let toast = document.getElementById('app-toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.id = 'app-toast';
-        document.body.appendChild(toast);
-    }
+let toastTimer;
+export function showToast(message) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    clearTimeout(toastTimer);
     toast.textContent = message;
     toast.classList.add('visible');
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => toast.classList.remove('visible'), duration);
+    toastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
 }

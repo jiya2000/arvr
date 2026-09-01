@@ -2,150 +2,222 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Lumière — Experience Indian cuisine through augmented reality. View dishes in 3D, explore ingredients, and order from our premium menu.">
-    <meta name="theme-color" content="#0a0a0a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lumière — Modern Indian dining. Seasonal cuisine presented with tradition, precision, and a contemporary touch. View our menu in augmented reality.">
+    <meta name="theme-color" content="#F5F1E8">
 
-    <title>Lumière — An Augmented Culinary Experience</title>
+    <title>Lumière — Modern Indian Dining</title>
 
-    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Model Viewer (for 3D & AR) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- HEADER                                       -->
-    <!-- ============================================ -->
-    <header class="app-header">
-        <h1 class="logo">LUMIÈRE</h1>
-        <p class="tagline">An Augmented Culinary Experience</p>
 
-        <!-- QR Code (Desktop only) -->
-        <div class="qr-section">
-            <div class="qr-card">
-                <img
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jiya2000.github.io/arvr/&bgcolor=ffffff&color=0a0a0a&margin=10"
-                    alt="Scan to open AR menu"
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                >
-                <div class="qr-info">
-                    <div class="qr-title">📱 Scan for AR Experience</div>
-                    <div class="qr-desc">Open this menu on your phone to explore dishes in augmented reality</div>
+    <!-- Navigation -->
+    <nav class="site-nav" id="site-nav">
+        <span class="site-nav__brand">Lumière</span>
+        <button class="site-nav__mobile-toggle" id="nav-toggle" aria-label="Toggle menu">☰</button>
+        <ul class="site-nav__links" id="nav-links">
+            <li><button class="site-nav__link active" data-view="home" id="nav-home">Home</button></li>
+            <li><button class="site-nav__link" data-view="all" id="nav-menu">Menu</button></li>
+            <li><button class="site-nav__link" data-view="recommend" id="nav-recommend">For You</button></li>
+            <li><button class="site-nav__link" data-view="restaurant" id="nav-restaurant">Restaurant</button></li>
+            <li><button class="site-nav__cta" data-view="restaurant" id="nav-reserve">Reserve</button></li>
+        </ul>
+    </nav>
+
+    <!-- ======================== -->
+    <!-- VIEW: Home               -->
+    <!-- ======================== -->
+    <section class="view-section active" id="view-home">
+
+        <!-- Hero -->
+        <div class="container">
+            <div class="hero">
+                <p class="hero__eyebrow">Modern Indian Dining</p>
+                <h1 class="hero__title">Lumière</h1>
+                <p class="hero__subtitle">
+                    Seasonal Indian cuisine, presented with tradition,
+                    precision, and a contemporary touch.
+                </p>
+                <div class="hero__actions">
+                    <button class="btn btn--primary" id="hero-menu-btn">Explore Menu</button>
+                    <button class="btn btn--secondary" id="hero-ar-btn">Experience in AR</button>
+                </div>
+                <div class="hero__image">
+                    <img src="assets/images/hero-food.jpg" alt="Beautifully plated biryani with edible flowers" width="1000" height="563" loading="eager">
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- ============================================ -->
-    <!-- NAVIGATION TABS                              -->
-    <!-- ============================================ -->
-    <nav class="nav-tabs" role="tablist" aria-label="Menu navigation">
-        <button class="tab-btn active" data-view="all" role="tab" aria-selected="true" id="tab-all">
-            🍽️ All
-        </button>
-        <button class="tab-btn" data-view="cat-starters" role="tab" id="tab-starters">
-            🥘 Starters
-        </button>
-        <button class="tab-btn" data-view="cat-mains" role="tab" id="tab-mains">
-            🍛 Mains
-        </button>
-        <button class="tab-btn" data-view="cat-desserts" role="tab" id="tab-desserts">
-            🍨 Desserts
-        </button>
-        <button class="tab-btn" data-view="cat-beverages" role="tab" id="tab-beverages">
-            🥤 Drinks
-        </button>
-        <button class="tab-btn special" data-view="recommend" role="tab" id="tab-recommend">
-            ✨ For You
-        </button>
-        <button class="tab-btn special" data-view="restaurant" role="tab" id="tab-restaurant">
-            🏛️ Restaurant
-        </button>
-    </nav>
+        <!-- Story Section -->
+        <section class="section section--alt">
+            <div class="container">
+                <div class="story">
+                    <div class="story__image">
+                        <img src="assets/images/restaurant-interior.jpg" alt="Lumière restaurant interior" loading="lazy">
+                    </div>
+                    <div class="story__content">
+                        <p class="section__eyebrow">A table for the curious</p>
+                        <h2 class="section__title">Where tradition meets the contemporary</h2>
+                        <p class="section__desc" style="margin-top:16px">
+                            Lumière brings contemporary Indian cuisine together with
+                            an intimate dining environment designed around discovery.
+                            Every dish tells a story — and now you can see it before it arrives.
+                        </p>
+                        <button class="btn btn--ghost" id="story-menu-btn" style="margin-top:24px">
+                            View the menu →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- ============================================ -->
-    <!-- VIEW: Menu                                   -->
-    <!-- ============================================ -->
-    <section class="view-section active" id="view-menu">
-        <div class="container">
-            <div class="section-header" id="menu-header">
-                <h2 class="section-title">Full Menu</h2>
-                <p class="section-subtitle">Our complete culinary collection</p>
+        <!-- Featured Dish -->
+        <section class="section">
+            <div class="container">
+                <div class="featured-dish" id="home-featured">
+                    <div class="featured-dish__image">
+                        <model-viewer
+                            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb"
+                            alt="Hyderabadi Chicken Biryani"
+                            auto-rotate
+                            camera-controls
+                            shadow-intensity="0.8"
+                            environment-image="neutral"
+                            camera-orbit="30deg 65deg 120%"
+                            loading="lazy"
+                        ></model-viewer>
+                    </div>
+                    <div class="featured-dish__content">
+                        <p class="featured-dish__label">Today's feature</p>
+                        <h3 class="featured-dish__name">Hyderabadi Chicken Biryani</h3>
+                        <p class="featured-dish__price">₹349</p>
+                        <p class="featured-dish__desc">
+                            Fragrant basmati rice layered with tender chicken, saffron, fried onions,
+                            and aromatic whole spices. Slow-cooked in the dum style — sealed and
+                            steamed for forty-five minutes.
+                        </p>
+                        <div class="featured-dish__actions">
+                            <button class="btn btn--primary btn--small" id="featured-ar-btn">View in AR →</button>
+                            <button class="btn btn--secondary btn--small" id="featured-add-btn">Add to order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Code (Dark section) -->
+        <section class="section section--dark">
+            <div class="container">
+                <div class="qr-block">
+                    <p class="qr-block__title">See your dish before it arrives</p>
+                    <p class="qr-block__desc">
+                        Scan to view our menu in augmented reality.
+                        Place any dish on your table before ordering.
+                    </p>
+                    <div class="qr-block__code">
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jiya2000.github.io/arvr/&bgcolor=ffffff&color=20201D&margin=10"
+                            alt="QR code to open AR menu"
+                            width="140" height="140"
+                            loading="lazy"
+                        >
+                    </div>
+                    <p class="qr-block__hint">Point your phone's camera at the code</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food Spread -->
+        <section class="section">
+            <div class="container">
+                <div class="story">
+                    <div class="story__content">
+                        <p class="section__eyebrow">The kitchen</p>
+                        <h2 class="section__title">Honest ingredients, careful hands</h2>
+                        <p class="section__desc" style="margin-top:16px">
+                            Our kitchen works with seasonal produce, whole spices ground daily,
+                            and recipes passed through generations — then refined with a modern eye.
+                        </p>
+                    </div>
+                    <div class="story__image">
+                        <img src="assets/images/food-spread.jpg" alt="Indian food spread with various dishes" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </section>
+
+    <!-- ======================== -->
+    <!-- VIEW: Menu               -->
+    <!-- ======================== -->
+    <section class="view-section" id="view-menu">
+        <div class="container" style="padding-top:48px">
+            <div class="section__header" id="menu-header">
+                <p class="section__eyebrow">The menu</p>
+                <h2 class="section__title">Our kitchen</h2>
             </div>
 
-            <div class="menu-grid" id="menu-grid">
-                <!-- Loading skeletons -->
-                <div class="menu-card">
-                    <div class="card-viewer skeleton" style="height:220px"></div>
-                    <div class="card-body">
-                        <div class="skeleton" style="height:20px;width:60%;margin-bottom:12px"></div>
-                        <div class="skeleton" style="height:14px;width:90%;margin-bottom:8px"></div>
-                        <div class="skeleton" style="height:14px;width:70%"></div>
-                    </div>
-                </div>
-                <div class="menu-card">
-                    <div class="card-viewer skeleton" style="height:220px"></div>
-                    <div class="card-body">
-                        <div class="skeleton" style="height:20px;width:60%;margin-bottom:12px"></div>
-                        <div class="skeleton" style="height:14px;width:90%;margin-bottom:8px"></div>
-                        <div class="skeleton" style="height:14px;width:70%"></div>
-                    </div>
-                </div>
-                <div class="menu-card">
-                    <div class="card-viewer skeleton" style="height:220px"></div>
-                    <div class="card-body">
-                        <div class="skeleton" style="height:20px;width:60%;margin-bottom:12px"></div>
-                        <div class="skeleton" style="height:14px;width:90%;margin-bottom:8px"></div>
-                        <div class="skeleton" style="height:14px;width:70%"></div>
-                    </div>
-                </div>
+            <div class="menu-tabs" id="menu-tabs">
+                <button class="menu-tab active" data-filter="all">All</button>
+                <button class="menu-tab" data-filter="starters">Starters</button>
+                <button class="menu-tab" data-filter="mains">Main courses</button>
+                <button class="menu-tab" data-filter="desserts">Desserts</button>
+                <button class="menu-tab" data-filter="beverages">Beverages</button>
+            </div>
+
+            <div class="menu-list" id="menu-list">
+                <!-- Rendered by JS -->
             </div>
         </div>
     </section>
 
-    <!-- ============================================ -->
-    <!-- VIEW: Smart Recommendations                  -->
-    <!-- ============================================ -->
+    <!-- ======================== -->
+    <!-- VIEW: Recommendations    -->
+    <!-- ======================== -->
     <section class="view-section" id="view-recommend"></section>
 
-    <!-- ============================================ -->
-    <!-- VIEW: Restaurant & Tour                      -->
-    <!-- ============================================ -->
+    <!-- ======================== -->
+    <!-- VIEW: Restaurant         -->
+    <!-- ======================== -->
     <section class="view-section" id="view-restaurant"></section>
 
-    <!-- ============================================ -->
-    <!-- FOOTER                                       -->
-    <!-- ============================================ -->
-    <footer class="app-footer">
-        <div class="footer-brand">LUMIÈRE</div>
-        <p class="footer-text">
-            An AR-enhanced restaurant experience prototype
-        </p>
-        <p class="footer-text" style="margin-top:8px">
-            Built with
-            <a href="https://modelviewer.dev" target="_blank" rel="noopener">&lt;model-viewer&gt;</a>
-            •
-            <a href="https://immersiveweb.dev" target="_blank" rel="noopener">WebXR</a>
-        </p>
-        <span class="prototype-badge">🧪 Prototype • Academic Project • No real transactions</span>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="site-footer__brand">Lumière</div>
+            <p class="site-footer__tagline">Modern Indian Dining</p>
+            <div class="site-footer__grid">
+                <div>
+                    <p class="site-footer__heading">Menu</p>
+                    <button class="site-footer__link" data-view="all">Full menu</button>
+                    <button class="site-footer__link" data-view="recommend">Recommendations</button>
+                </div>
+                <div>
+                    <p class="site-footer__heading">Restaurant</p>
+                    <button class="site-footer__link" data-view="restaurant">Virtual tour</button>
+                    <button class="site-footer__link" data-view="restaurant">Reserve a table</button>
+                </div>
+                <div>
+                    <p class="site-footer__heading">Experience</p>
+                    <button class="site-footer__link" data-view="all">View in AR</button>
+                    <button class="site-footer__link" data-view="home">About Lumière</button>
+                </div>
+            </div>
+            <div class="site-footer__bottom">
+                <p>© 2026 Lumière. Built with <a href="https://modelviewer.dev" target="_blank" rel="noopener">&lt;model-viewer&gt;</a></p>
+                <span class="site-footer__prototype">Prototype · Academic project · No real transactions</span>
+            </div>
+        </div>
     </footer>
 
-    <!-- ============================================ -->
-    <!-- App Module                                   -->
-    <!-- ============================================ -->
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
