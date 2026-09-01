@@ -142,8 +142,22 @@ function renderMenu(filter) {
                 : '<span class="menu-item__dietary menu-item__dietary--nonveg">Non-veg</span>';
 
             const spiceDots = getSpiceDots(item.spiceLevel);
-            const arLink = item.modelUrl
-                ? `<button class="menu-item__ar-link" data-id="${item.id}">View in AR →</button>`
+            const arLink = '';
+            
+            const arPreview = item.modelUrl
+                ? `
+                <div class="menu-item__ar-preview">
+                    <model-viewer
+                        src="${item.modelUrl}"
+                        alt="${item.name}"
+                        auto-rotate camera-controls
+                        shadow-intensity="0.8"
+                        environment-image="neutral"
+                        loading="lazy"
+                    ></model-viewer>
+                    <button class="btn btn--secondary btn--small menu-item__ar-link" data-id="${item.id}" style="width:100%;margin-top:12px;">Experience in AR →</button>
+                </div>
+                `
                 : '';
 
             html += `
@@ -158,8 +172,8 @@ function renderMenu(filter) {
                             <span class="menu-item__tag">${spiceDots}</span>
                             <span class="menu-item__tag">${item.prepTime} min</span>
                             <span class="menu-item__tag">${item.calories} kcal</span>
-                            ${arLink}
                         </div>
+                        ${arPreview}
                     </div>
                     <div class="menu-item__right">
                         <span class="menu-item__price">${CONFIG.restaurant.currency}${item.price}</span>
