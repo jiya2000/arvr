@@ -37,7 +37,10 @@
 
         header {
             text-align: center;
-            padding: 60px 20px 30px;
+            padding: 50px 20px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         h1 {
@@ -55,6 +58,31 @@
             margin-top: 10px;
             font-weight: 300;
             letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        /* QR Code Container */
+        .qr-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .qr-container img {
+            border-radius: 8px;
+            width: 100px;
+            height: 100px;
+        }
+        .qr-text {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
@@ -227,6 +255,7 @@
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .section-title { font-size: 2rem; }
+            .qr-container { display: none; /* Hide QR on mobile since they are already on it */ }
         }
     </style>
 </head>
@@ -235,6 +264,10 @@
     <header>
         <h1>Lumière</h1>
         <div class="subtitle">An Augmented Culinary Experience</div>
+        <div class="qr-container">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jiya2000.github.io/arvr/" alt="Scan to open on mobile">
+            <span class="qr-text">Scan for Mobile AR</span>
+        </div>
     </header>
 
     <!-- Category Tabs -->
@@ -277,7 +310,8 @@
                 <!-- 3 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Truffle Arancini" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <!-- Shishkebab used for Arancini approximation -->
+                        <model-viewer src="https://modelviewer.dev/shared-assets/models/shishkebab.glb" loading="lazy" alt="Truffle Arancini" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Truffle Arancini</h3>
@@ -288,7 +322,7 @@
                 <!-- 4 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Carpaccio" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Carpaccio" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Wagyu Beef Carpaccio</h3>
@@ -317,7 +351,7 @@
                 <!-- 6 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Scallops" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Scallops" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Pan-Seared Scallops</h3>
@@ -328,7 +362,7 @@
                 <!-- 7 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Duck" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://modelviewer.dev/shared-assets/models/shishkebab.glb" loading="lazy" alt="Duck" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Duck Breast à l'Orange</h3>
@@ -350,7 +384,7 @@
                 <!-- 9 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Sea Bass" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Sea Bass" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Chilean Sea Bass</h3>
@@ -361,7 +395,7 @@
                 <!-- 10 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Ribeye" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://modelviewer.dev/shared-assets/models/shishkebab.glb" loading="lazy" alt="Ribeye" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Prime Ribeye Steak</h3>
@@ -372,7 +406,7 @@
                 <!-- 11 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Lobster Linguine" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BarramundiFish/glTF-Binary/BarramundiFish.glb" loading="lazy" alt="Lobster Linguine" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Saffron Lobster Linguine</h3>
@@ -383,7 +417,7 @@
                 <!-- 12 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Cauliflower" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Cauliflower" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Roasted Cauliflower Steak (V)</h3>
@@ -401,7 +435,7 @@
                 <!-- 13 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Lava Cake" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Lava Cake" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Dark Chocolate Lava Cake</h3>
@@ -412,7 +446,7 @@
                 <!-- 14 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Creme Brulee" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Creme Brulee" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Vanilla Bean Crème Brûlée</h3>
@@ -423,7 +457,7 @@
                 <!-- 15 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Mille-Feuille" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" loading="lazy" alt="Mille-Feuille" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Pistachio Mille-Feuille</h3>
