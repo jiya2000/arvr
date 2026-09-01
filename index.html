@@ -17,7 +17,6 @@
         :root {
             --bg-color: #121212;
             --card-bg: rgba(30, 30, 30, 0.6);
-            --list-bg: rgba(20, 20, 20, 0.4);
             --text-main: #f5f5f5;
             --text-muted: #aaaaaa;
             --accent-gold: #d4af37;
@@ -38,13 +37,12 @@
 
         header {
             text-align: center;
-            padding: 80px 20px 40px;
-            margin-bottom: 20px;
+            padding: 60px 20px 30px;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 600;
             margin: 0;
             color: var(--accent-gold);
@@ -52,22 +50,64 @@
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
-            margin-top: 15px;
+            margin-top: 10px;
             font-weight: 300;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
+        /* Category Tabs Navigation */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 50px;
+            padding: 0 20px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .tab-btn:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-gold);
+            color: #121212;
+            border-color: var(--accent-gold);
+            font-weight: 600;
+        }
+
         .menu-wrapper {
-            max-width: 1000px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 0 20px 80px;
         }
 
         .menu-section {
-            margin-bottom: 60px;
+            margin-bottom: 80px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
@@ -91,42 +131,24 @@
             background-color: var(--accent-gold);
         }
 
-        /* Grid for AR Highlight Cards */
-        .ar-highlights {
+        /* Grid for AR Cards */
+        .ar-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
-            margin-bottom: 30px;
         }
 
         .menu-item-ar {
             background: var(--card-bg);
             border: 1px solid var(--border-light);
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            position: relative;
-        }
-
-        .menu-item-ar::before {
-            content: 'AR Experience';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent-gold);
-            color: #121212;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
         }
 
         .menu-item-ar:hover {
@@ -137,7 +159,7 @@
 
         .viewer-container {
             width: 100%;
-            height: 260px;
+            height: 240px;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
@@ -152,52 +174,20 @@
             --poster-color: transparent;
         }
 
-        /* Standard List Items */
-        .menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .menu-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding: 15px 20px;
-            background: var(--list-bg);
-            border-radius: 8px;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-        }
-
-        .menu-list-item:hover {
-            background: rgba(40, 40, 40, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .item-details {
-            flex: 1;
-            padding-right: 20px;
-        }
-
         .item-header {
             display: flex;
+            justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 10px;
         }
 
         .item-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             margin: 0;
             color: var(--text-main);
-        }
-
-        .item-desc {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin: 0;
-            line-height: 1.4;
         }
 
         .price {
@@ -207,12 +197,12 @@
             white-space: nowrap;
         }
 
-        .dots {
+        .item-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.5;
             flex-grow: 1;
-            border-bottom: 1px dotted rgba(255,255,255,0.2);
-            margin: 0 15px;
-            position: relative;
-            top: -6px;
         }
 
         /* Custom AR Button */
@@ -221,11 +211,11 @@
             color: #121212;
             border-radius: 30px;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
-            bottom: 16px;
-            right: 16px;
+            bottom: 12px;
+            right: 12px;
             transition: background-color 0.3s ease;
         }
 
@@ -235,14 +225,8 @@
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 3rem; }
-            .menu-list-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .dots { display: none; }
-            .price { margin-top: 10px; align-self: flex-end; }
-            .item-details { padding-right: 0; }
+            h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
         }
     </style>
 </head>
@@ -253,198 +237,297 @@
         <div class="subtitle">An Augmented Culinary Experience</div>
     </header>
 
+    <!-- Category Tabs -->
+    <nav class="category-tabs">
+        <button class="tab-btn active" data-target="all">All Menu</button>
+        <button class="tab-btn" data-target="starters">Starters</button>
+        <button class="tab-btn" data-target="mains">Main Courses</button>
+        <button class="tab-btn" data-target="desserts">Desserts</button>
+        <button class="tab-btn" data-target="beverages">Beverages</button>
+    </nav>
+
     <div class="menu-wrapper">
         
         <!-- STARTERS SECTION -->
-        <section class="menu-section">
+        <section class="menu-section" id="starters">
             <h2 class="section-title">Starters</h2>
-            
-            <div class="ar-highlights">
+            <div class="ar-grid">
+                <!-- 1 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" alt="Dish with olives" auto-rotate rotation-per-second="30deg" camera-controls ar shadow-intensity="1.5" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Olives" auto-rotate camera-controls ar shadow-intensity="1.5" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Iridescent Olives</h3>
-                        <div class="dots"></div>
                         <span class="price">$14</span>
                     </div>
                     <p class="item-desc">Premium Mediterranean olives served in an artisanal iridescent glass dish.</p>
                 </div>
-
+                <!-- 2 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" alt="Avocado" auto-rotate rotation-per-second="30deg" camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Avocado" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Hass Avocado Tartare</h3>
-                        <div class="dots"></div>
                         <span class="price">$18</span>
                     </div>
                     <p class="item-desc">Perfectly ripe Hass avocado, seasoned with pink salt and extra virgin olive oil.</p>
                 </div>
-            </div>
-
-            <div class="menu-list">
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 3 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Truffle Arancini" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Truffle Arancini</h3>
-                        <p class="item-desc">Crispy risotto spheres stuffed with wild mushrooms and black truffle fondue.</p>
+                        <span class="price">$16</span>
                     </div>
-                    <span class="price">$16</span>
+                    <p class="item-desc">Crispy risotto spheres stuffed with wild mushrooms and black truffle fondue.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 4 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Carpaccio" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Wagyu Beef Carpaccio</h3>
-                        <p class="item-desc">Thinly sliced Wagyu, capers, shaved parmesan, and a lemon emulsion.</p>
+                        <span class="price">$22</span>
                     </div>
-                    <span class="price">$22</span>
+                    <p class="item-desc">Thinly sliced Wagyu, capers, shaved parmesan, and a lemon emulsion.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
-                        <h3 class="item-name">Burrata & Heirloom Tomato</h3>
-                        <p class="item-desc">Fresh burrata, basil pesto, aged balsamic reduction, and micro-greens.</p>
+                <!-- 5 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Burrata" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
-                    <span class="price">$19</span>
+                    <div class="item-header">
+                        <h3 class="item-name">Burrata & Heirloom Tomato</h3>
+                        <span class="price">$19</span>
+                    </div>
+                    <p class="item-desc">Fresh burrata, basil pesto, aged balsamic reduction, and micro-greens.</p>
                 </div>
             </div>
         </section>
 
         <!-- MAIN COURSES SECTION -->
-        <section class="menu-section">
+        <section class="menu-section" id="mains">
             <h2 class="section-title">Main Courses</h2>
-            <div class="menu-list">
-                <div class="menu-list-item">
-                    <div class="item-details">
+            <div class="ar-grid">
+                <!-- 6 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Scallops" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Pan-Seared Scallops</h3>
-                        <p class="item-desc">Jumbo sea scallops, cauliflower purée, pancetta crisp, and sage brown butter.</p>
+                        <span class="price">$34</span>
                     </div>
-                    <span class="price">$34</span>
+                    <p class="item-desc">Jumbo sea scallops, cauliflower purée, pancetta crisp, and sage brown butter.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 7 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Duck" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Duck Breast à l'Orange</h3>
-                        <p class="item-desc">Roasted duck breast, spiced orange glaze, fondant potatoes, and charred broccolini.</p>
+                        <span class="price">$38</span>
                     </div>
-                    <span class="price">$38</span>
+                    <p class="item-desc">Roasted duck breast, spiced orange glaze, fondant potatoes, and charred broccolini.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 8 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Risotto" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Wild Mushroom Risotto</h3>
-                        <p class="item-desc">Arborio rice, porcini broth, shaved black truffle, and 24-month Parmigiano-Reggiano.</p>
+                        <span class="price">$28</span>
                     </div>
-                    <span class="price">$28</span>
+                    <p class="item-desc">Arborio rice, porcini broth, shaved black truffle, and 24-month Parmigiano-Reggiano.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 9 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Sea Bass" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Chilean Sea Bass</h3>
-                        <p class="item-desc">Miso-glazed sea bass, bok choy, shiitake mushrooms, and yuzu dashi.</p>
+                        <span class="price">$42</span>
                     </div>
-                    <span class="price">$42</span>
+                    <p class="item-desc">Miso-glazed sea bass, bok choy, shiitake mushrooms, and yuzu dashi.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 10 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Ribeye" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Prime Ribeye Steak</h3>
-                        <p class="item-desc">14oz bone-in ribeye, truffle mash, roasted asparagus, and red wine jus.</p>
+                        <span class="price">$55</span>
                     </div>
-                    <span class="price">$55</span>
+                    <p class="item-desc">14oz bone-in ribeye, truffle mash, roasted asparagus, and red wine jus.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 11 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Lobster Linguine" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Saffron Lobster Linguine</h3>
-                        <p class="item-desc">Fresh handmade linguine, Maine lobster tail, cherry tomatoes, and saffron cream.</p>
+                        <span class="price">$46</span>
                     </div>
-                    <span class="price">$46</span>
+                    <p class="item-desc">Fresh handmade linguine, Maine lobster tail, cherry tomatoes, and saffron cream.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
-                        <h3 class="item-name">Roasted Cauliflower Steak (V)</h3>
-                        <p class="item-desc">Harissa-marinated cauliflower, quinoa pilaf, tahini drizzle, and pomegranate seeds.</p>
+                <!-- 12 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Cauliflower" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
-                    <span class="price">$24</span>
+                    <div class="item-header">
+                        <h3 class="item-name">Roasted Cauliflower Steak (V)</h3>
+                        <span class="price">$24</span>
+                    </div>
+                    <p class="item-desc">Harissa-marinated cauliflower, quinoa pilaf, tahini drizzle, and pomegranate seeds.</p>
                 </div>
             </div>
         </section>
 
         <!-- DESSERTS SECTION -->
-        <section class="menu-section">
+        <section class="menu-section" id="desserts">
             <h2 class="section-title">Desserts</h2>
-            <div class="menu-list">
-                <div class="menu-list-item">
-                    <div class="item-details">
+            <div class="ar-grid">
+                <!-- 13 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Lava Cake" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Dark Chocolate Lava Cake</h3>
-                        <p class="item-desc">Warm molten center, served with Madagascar vanilla bean ice cream.</p>
+                        <span class="price">$14</span>
                     </div>
-                    <span class="price">$14</span>
+                    <p class="item-desc">Warm molten center, served with Madagascar vanilla bean ice cream.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 14 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Creme Brulee" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Vanilla Bean Crème Brûlée</h3>
-                        <p class="item-desc">Classic baked custard with a caramelized sugar crust and fresh berries.</p>
+                        <span class="price">$12</span>
                     </div>
-                    <span class="price">$12</span>
+                    <p class="item-desc">Classic baked custard with a caramelized sugar crust and fresh berries.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 15 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/IridescentDishWithOlives/glTF-Binary/IridescentDishWithOlives.glb" loading="lazy" alt="Mille-Feuille" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Pistachio Mille-Feuille</h3>
-                        <p class="item-desc">Layers of delicate puff pastry and rich pistachio mousseline.</p>
+                        <span class="price">$15</span>
                     </div>
-                    <span class="price">$15</span>
+                    <p class="item-desc">Layers of delicate puff pastry and rich pistachio mousseline.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
-                        <h3 class="item-name">Artisanal Gelato Selection</h3>
-                        <p class="item-desc">Trio of seasonal flavors made in-house daily. Ask your server.</p>
+                <!-- 16 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb" loading="lazy" alt="Gelato" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
-                    <span class="price">$10</span>
+                    <div class="item-header">
+                        <h3 class="item-name">Artisanal Gelato Selection</h3>
+                        <span class="price">$10</span>
+                    </div>
+                    <p class="item-desc">Trio of seasonal flavors made in-house daily. Ask your server.</p>
                 </div>
             </div>
         </section>
 
         <!-- BEVERAGES SECTION -->
-        <section class="menu-section">
+        <section class="menu-section" id="beverages">
             <h2 class="section-title">Beverages</h2>
-            
-            <div class="ar-highlights">
+            <div class="ar-grid">
+                <!-- 17 -->
                 <div class="menu-item-ar">
                     <div class="viewer-container">
-                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" alt="Water Bottle" auto-rotate rotation-per-second="30deg" camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Water Bottle" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
                     <div class="item-header">
                         <h3 class="item-name">Artisan Sparkling Water</h3>
-                        <div class="dots"></div>
                         <span class="price">$8</span>
                     </div>
                     <p class="item-desc">Crisp, refreshing artisan sparkling water, served in our signature glass bottle.</p>
                 </div>
-            </div>
-
-            <div class="menu-list">
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 18 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Negroni" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Signature Negroni</h3>
-                        <p class="item-desc">Gin, Campari, Sweet Vermouth, and an orange twist.</p>
+                        <span class="price">$16</span>
                     </div>
-                    <span class="price">$16</span>
+                    <p class="item-desc">Gin, Campari, Sweet Vermouth, and an orange twist.</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
+                <!-- 19 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Bordeaux" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
+                    </div>
+                    <div class="item-header">
                         <h3 class="item-name">Aged Bordeaux Reserve</h3>
-                        <p class="item-desc">Full-bodied red with notes of dark cherry and oak. (By the glass)</p>
+                        <span class="price">$24</span>
                     </div>
-                    <span class="price">$24</span>
+                    <p class="item-desc">Full-bodied red with notes of dark cherry and oak. (By the glass)</p>
                 </div>
-                <div class="menu-list-item">
-                    <div class="item-details">
-                        <h3 class="item-name">Hand-Crafted Espresso</h3>
-                        <p class="item-desc">Locally roasted single-origin espresso beans, pulled to perfection.</p>
+                <!-- 20 -->
+                <div class="menu-item-ar">
+                    <div class="viewer-container">
+                        <model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb" loading="lazy" alt="Espresso" auto-rotate camera-controls ar shadow-intensity="1" environment-image="neutral"></model-viewer>
                     </div>
-                    <span class="price">$6</span>
+                    <div class="item-header">
+                        <h3 class="item-name">Hand-Crafted Espresso</h3>
+                        <span class="price">$6</span>
+                    </div>
+                    <p class="item-desc">Locally roasted single-origin espresso beans, pulled to perfection.</p>
                 </div>
             </div>
         </section>
 
     </div>
+
+    <!-- Script for Tab Filtering -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const sections = document.querySelectorAll('.menu-section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Filter sections
+                    const target = tab.getAttribute('data-target');
+                    
+                    sections.forEach(section => {
+                        if (target === 'all' || section.id === target) {
+                            section.style.display = 'block';
+                            // Add slight animation
+                            section.style.animation = 'none';
+                            section.offsetHeight; /* trigger reflow */
+                            section.style.animation = 'fadeIn 0.5s ease forwards';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>
