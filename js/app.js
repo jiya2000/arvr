@@ -6,7 +6,7 @@ import { CONFIG } from './config.js';
 import { initCartUI, showCustomizeModal, showToast } from './cart.js';
 import { initDiscoveryUI, renderDiscoveryBar, triggerDiscovery } from './discovery.js';
 import { renderRecommendationsUI } from './recommendations.js';
-import { renderRestaurantTour } from './restaurant.js';
+import { renderRestaurantTour } from './restaurant.js?v=2';
 import { launchAR } from './ar.js';
 
 let menuData = null;
