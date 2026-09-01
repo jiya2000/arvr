@@ -55,6 +55,28 @@
             </div>
         </div>
 
+        <!-- QR Code (Dark section) moved here -->
+        <section class="section section--dark">
+            <div class="container">
+                <div class="qr-block">
+                    <p class="qr-block__title">See your dish before it arrives</p>
+                    <p class="qr-block__desc">
+                        Scan to view our menu in augmented reality.
+                        Place any dish on your table before ordering.
+                    </p>
+                    <div class="qr-block__code">
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jiya2000.github.io/arvr/&bgcolor=ffffff&color=20201D&margin=10"
+                            alt="QR code to open AR menu"
+                            width="140" height="140"
+                            loading="lazy"
+                        >
+                    </div>
+                    <p class="qr-block__hint">Point your phone's camera at the code. No app needed.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Story Section -->
         <section class="section section--alt">
             <div class="container">
@@ -112,24 +134,32 @@
             </div>
         </section>
 
-        <!-- QR Code (Dark section) -->
-        <section class="section section--dark">
-            <div class="container">
-                <div class="qr-block">
-                    <p class="qr-block__title">See your dish before it arrives</p>
-                    <p class="qr-block__desc">
-                        Scan to view our menu in augmented reality.
-                        Place any dish on your table before ordering.
-                    </p>
-                    <div class="qr-block__code">
-                        <img
-                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jiya2000.github.io/arvr/&bgcolor=ffffff&color=20201D&margin=10"
-                            alt="QR code to open AR menu"
-                            width="140" height="140"
-                            loading="lazy"
-                        >
-                    </div>
-                    <p class="qr-block__hint">Point your phone's camera at the code</p>
+        <!-- Tech Stack Explainer -->
+        <section class="section">
+            <div class="container container--narrow" style="text-align: center;">
+                <p class="section__eyebrow">Academic Polish</p>
+                <h2 class="section__title">The Technology</h2>
+                <p class="section__desc" style="margin: 0 auto 32px;">
+                    This prototype is powered by modern WebXR and Apple's Quick Look capabilities. 
+                    Using the open-source <code>&lt;model-viewer&gt;</code> web component, we deliver immersive 3D culinary previews directly in the browser—eliminating the friction of downloading a standalone app.
+                </p>
+                <div style="display:flex; justify-content:center; gap: 24px; flex-wrap: wrap;">
+                    <span style="font-size: 0.85rem; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px;">WebXR Device API</span>
+                    <span style="font-size: 0.85rem; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px;">iOS Quick Look (.usdz)</span>
+                    <span style="font-size: 0.85rem; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px;">glTF/GLB Models</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fallback Video -->
+        <section class="section section--alt">
+            <div class="container container--narrow">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <p class="section__eyebrow">Demo</p>
+                    <h2 class="section__title">Experience Walkthrough</h2>
+                </div>
+                <div style="aspect-ratio: 16/9; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <p><em>[Placeholder for Fallback Video Walkthrough]</em></p>
                 </div>
             </div>
         </section>

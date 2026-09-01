@@ -22,11 +22,14 @@ export function launchAR(dish) {
         <div style="flex:1;position:relative;background:var(--bg-alt,#EDE8DC)">
             <model-viewer
                 src="${dish.modelUrl}"
+                ${dish.iosSrc ? `ios-src="${dish.iosSrc}"` : ''}
                 alt="${dish.name}"
                 auto-rotate
                 camera-controls
                 ar
                 ar-modes="webxr scene-viewer quick-look"
+                ar-placement="floor"
+                ar-scale="auto"
                 shadow-intensity="0.8"
                 environment-image="neutral"
                 camera-orbit="${CONFIG.ar.cameraOrbit}"
@@ -52,7 +55,14 @@ export function launchAR(dish) {
                 <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem">${dish.name}</div>
                 <div style="font-size:0.85rem;color:#B5AFA5">${CONFIG.restaurant.currency}${dish.price}</div>
             </div>
-            <div style="display:flex;gap:10px">
+            <div style="display:flex;gap:10px;align-items:center;">
+                <!-- Scale toggle -->
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.75rem;cursor:pointer;margin-right:8px;">
+                    <input type="checkbox" id="ar-scale-toggle" style="cursor:pointer"> True Size
+                </label>
+                <!-- Scale reference hint -->
+                <span style="font-size:1.2rem;opacity:0.8;margin-right:4px;" title="Scale reference (coin)">🪙</span>
+                
                 <button id="ar-place-btn" class="btn btn--accent btn--small" style="
                     background:#A45A3A;color:white;border:none;
                     padding:10px 20px;border-radius:4px;font-size:0.82rem;cursor:pointer;
@@ -75,9 +85,16 @@ export function launchAR(dish) {
         overlay.remove();
     });
 
+    // Scale toggle
+    const scaleToggle = overlay.querySelector('#ar-scale-toggle');
+    const modelViewer = overlay.querySelector('model-viewer');
+    scaleToggle.addEventListener('change', (e) => {
+        modelViewer.setAttribute('ar-scale', e.target.checked ? 'fixed' : 'auto');
+    });
+
     // Place on table — activate AR
     overlay.querySelector('#ar-place-btn').addEventListener('click', () => {
-        const modelViewer = overlay.querySelector('model-viewer');
+        console.log(`[Analytics] Track Event: AR View Started | Dish: ${dish.name} | Scale: ${scaleToggle.checked ? 'fixed' : 'auto'}`);
         if (modelViewer) {
             modelViewer.activateAR();
         }
@@ -85,6 +102,7 @@ export function launchAR(dish) {
 
     // Add to order
     overlay.querySelector('#ar-add-btn').addEventListener('click', () => {
+        console.log(`[Analytics] Track Event: Add to Order (from AR view) | Dish: ${dish.name}`);
         document.body.style.overflow = '';
         overlay.remove();
         window.dispatchEvent(new CustomEvent('ar-add-to-cart', { detail: { dish } }));

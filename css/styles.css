@@ -1645,3 +1645,51 @@ model-viewer::part(default-ar-button) {
     font-weight: 500;
     font-size: 0.78rem;
 }
+
+/* --- Loading Skeleton --- */
+.skeleton-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--bg-alt) 0%, rgba(255,255,255,0.4) 50%, var(--bg-alt) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* --- Steam Micro-animation --- */
+.hot-dish-steam {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.4);
+    filter: blur(8px);
+    border-radius: 50%;
+    animation: rise 3s infinite ease-in;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+}
+.hot-dish-steam:nth-child(2) {
+    left: 45%;
+    animation-delay: 1s;
+    height: 30px;
+}
+.hot-dish-steam:nth-child(3) {
+    left: 55%;
+    animation-delay: 2s;
+    height: 35px;
+}
+
+@keyframes rise {
+    0% { transform: translate(-50%, 10px) scale(1); opacity: 0; }
+    30% { opacity: 0.6; }
+    100% { transform: translate(-50%, -60px) scale(2); opacity: 0; }
+}

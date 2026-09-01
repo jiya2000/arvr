@@ -149,13 +149,22 @@ function renderMenu(filter) {
                 <div class="menu-item__ar-preview">
                     <model-viewer
                         src="${item.modelUrl}"
+                        ${item.iosSrc ? `ios-src="${item.iosSrc}"` : ''}
                         alt="${item.name}"
                         auto-rotate camera-controls
                         shadow-intensity="0.8"
                         environment-image="neutral"
+                        ar-placement="floor"
                         loading="lazy"
-                    ></model-viewer>
-                    <button class="btn btn--secondary btn--small menu-item__ar-link" data-id="${item.id}" style="width:100%;margin-top:12px;">Experience in AR →</button>
+                    >
+                        <div class="skeleton-shimmer" slot="poster"></div>
+                        ${(item.category === 'mains' || item.category === 'starters') ? '<div class="hot-dish-steam"></div><div class="hot-dish-steam"></div><div class="hot-dish-steam"></div>' : ''}
+                    </model-viewer>
+                    <div style="display:flex; justify-content:center; margin-top:8px;">
+                        <span class="microcopy" style="font-size:0.7rem; color:var(--text-muted);">No app needed — works directly in your browser</span>
+                    </div>
+                    <button class="btn btn--secondary btn--small menu-item__ar-link" data-id="${item.id}" style="width:100%;margin-top:4px;">Experience in AR →</button>
+                    <button class="btn btn--ghost btn--small menu-item__compare-link" data-id="${item.id}" style="width:100%;margin-top:4px; font-size: 0.75rem;">Compare with another dish</button>
                 </div>
                 `
                 : '';
@@ -205,8 +214,21 @@ function renderMenu(filter) {
             e.stopPropagation();
             const dish = menuData.items.find(i => i.id === btn.dataset.id);
             if (dish) {
+                console.log(`[Analytics] Track Event: AR Button Clicked (from Menu list) | Dish: ${dish.name}`);
                 launchAR(dish);
                 triggerDiscovery(dish);
+            }
+        });
+    });
+
+    // Event: Compare link
+    container.querySelectorAll('.menu-item__compare-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dish = menuData.items.find(i => i.id === btn.dataset.id);
+            if (dish) {
+                console.log(`[Analytics] Track Event: Compare Mode Started | Dish: ${dish.name}`);
+                startCompareMode(dish);
             }
         });
     });
@@ -216,7 +238,10 @@ function renderMenu(filter) {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const dish = menuData.items.find(i => i.id === btn.dataset.id);
-            if (dish) showCustomizeModal(dish);
+            if (dish) {
+                console.log(`[Analytics] Track Event: Add to Order Clicked (from Menu list) | Dish: ${dish.name}`);
+                showCustomizeModal(dish);
+            }
         });
     });
 }
@@ -229,4 +254,84 @@ function getSpiceDots(level) {
         case 'hot': return '● ● ● Hot';
         default: return '● ● ○ Medium';
     }
+}
+
+// --- Compare Mode ---
+function startCompareMode(dish1) {
+    // Show a modal to select second dish
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay active';
+    overlay.innerHTML = `
+        <div class="modal" style="padding:24px; text-align:center;">
+            <button class="modal__close">✕</button>
+            <h3 style="font-family:var(--font-serif); font-size:1.8rem; margin-bottom:16px;">Compare Portions</h3>
+            <p style="color:var(--text-secondary); margin-bottom:24px;">Select another dish to compare side-by-side with <strong>${dish1.name}</strong>.</p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; max-height: 400px; overflow-y:auto;">
+                ${menuData.items.filter(d => d.modelUrl && d.id !== dish1.id).map(d => `
+                    <button class="btn btn--secondary btn--small compare-select-btn" data-id="${d.id}" style="width:45%; text-align:left; padding:8px;">
+                        ${d.name}
+                    </button>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.modal__close').addEventListener('click', () => overlay.remove());
+
+    overlay.querySelectorAll('.compare-select-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const dish2 = menuData.items.find(i => i.id === btn.dataset.id);
+            if (dish2) {
+                overlay.remove();
+                showCompareView(dish1, dish2);
+            }
+        });
+    });
+}
+
+function showCompareView(dish1, dish2) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed; inset: 0; z-index: 2500;
+        background: #F5F1E8; display: flex; flex-direction: column;
+    `;
+    overlay.innerHTML = `
+        <div style="padding:16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border);">
+            <h2 style="font-family:var(--font-serif); font-size:1.5rem;">Compare</h2>
+            <button class="modal__close" style="position:static;" id="compare-close">✕</button>
+        </div>
+        <div style="display:flex; flex:1; overflow:hidden;">
+            <div style="flex:1; border-right:1px solid var(--border); display:flex; flex-direction:column;">
+                <model-viewer
+                    src="${dish1.modelUrl}"
+                    ${dish1.iosSrc ? `ios-src="${dish1.iosSrc}"` : ''}
+                    auto-rotate camera-controls
+                    style="flex:1; width:100%;"
+                ></model-viewer>
+                <div style="padding:16px; text-align:center; background:var(--bg-alt);">
+                    <h3 style="font-family:var(--font-serif);">${dish1.name}</h3>
+                    <p style="color:var(--text-secondary);">${CONFIG.restaurant.currency}${dish1.price}</p>
+                </div>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column;">
+                <model-viewer
+                    src="${dish2.modelUrl}"
+                    ${dish2.iosSrc ? `ios-src="${dish2.iosSrc}"` : ''}
+                    auto-rotate camera-controls
+                    style="flex:1; width:100%;"
+                ></model-viewer>
+                <div style="padding:16px; text-align:center; background:var(--bg-alt);">
+                    <h3 style="font-family:var(--font-serif);">${dish2.name}</h3>
+                    <p style="color:var(--text-secondary);">${CONFIG.restaurant.currency}${dish2.price}</p>
+                </div>
+            </div>
+        </div>
+        <div style="padding:16px; text-align:center; background:var(--bg-warm); color:var(--text-on-dark);">
+            <p style="font-size:0.85rem; opacity:0.8;">Note: You can view one dish at a time in full AR.</p>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('#compare-close').addEventListener('click', () => overlay.remove());
 }
