@@ -195,6 +195,14 @@ function renderMenu(filter) {
 
     container.innerHTML = html;
 
+    // Trigger sequential 3D unfold animation
+    const menuItems = container.querySelectorAll('.menu-item');
+    menuItems.forEach((row, index) => {
+        setTimeout(() => {
+            row.classList.add('unfold-active');
+        }, index * 60); // 60ms stagger
+    });
+
     // Render discovery bar inside menu
     renderDiscoveryBar(document.getElementById('discovery-container'));
 

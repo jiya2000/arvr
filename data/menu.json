@@ -282,7 +282,7 @@
       "category": "starters",
       "price": 149,
       "description": "Crispy golden pastry triangles stuffed with spiced potatoes, peas, and cumin. Served with chutneys.",
-      "modelUrl": "https://raw.githubusercontent.com/code4fukui/xrgourmet/main/takoyaki-takobei.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/appetizers/samosa/day_226_samosa.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -497,7 +497,7 @@
       "category": "mains",
       "price": 349,
       "description": "Fragrant basmati rice layered with tender chicken, saffron, fried onions, and aromatic whole spices. Slow-cooked in the dum style.",
-      "modelUrl": "https://raw.githubusercontent.com/code4fukui/xrgourmet/main/slim-volgarice.glb",
+      "modelUrl": "https://raw.githubusercontent.com/harikrishnan669/FoodAR/main/Assets/Models/biriyani.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -570,7 +570,7 @@
       "category": "mains",
       "price": 449,
       "description": "Rich, aromatic biryani with tender slow-cooked mutton, layered with fragrant rice and caramelized onions.",
-      "modelUrl": "https://raw.githubusercontent.com/code4fukui/xrgourmet/main/slim-volgarice.glb",
+      "modelUrl": "https://raw.githubusercontent.com/harikrishnan669/FoodAR/main/Assets/Models/biriyani.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1035,7 +1035,7 @@
       "category": "mains",
       "price": 249,
       "description": "Fragrant dum-cooked basmati rice layered with seasonal vegetables, saffron, and aromatic herbs.",
-      "modelUrl": "https://raw.githubusercontent.com/code4fukui/xrgourmet/main/slim-volgarice.glb",
+      "modelUrl": "https://raw.githubusercontent.com/harikrishnan669/FoodAR/main/Assets/Models/biriyani.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1089,7 +1089,7 @@
       "category": "mains",
       "price": 199,
       "description": "Crispy golden fermented rice-lentil crepe filled with spiced potato masala, served with sambar and coconut chutney.",
-      "modelUrl": "https://raw.githubusercontent.com/code4fukui/xrgourmet/main/taishiron-curry.glb",
+      "modelUrl": "https://raw.githubusercontent.com/harikrishnan669/FoodAR/main/Assets/Models/dosafinal6.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1568,7 +1568,7 @@
       "category": "beverages",
       "price": 129,
       "description": "Creamy yogurt smoothie blended with ripe Alphonso mangoes, cardamom, and a touch of saffron.",
-      "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/lime%20juice/lemonade__glass.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1622,7 +1622,7 @@
       "category": "beverages",
       "price": 99,
       "description": "Traditional Punjabi sweet yogurt drink topped with a layer of malai and rose petals.",
-      "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/lime%20juice/lemonade__glass.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1673,7 +1673,7 @@
       "category": "beverages",
       "price": 79,
       "description": "Aromatic Indian spiced tea brewed with ginger, cardamom, cinnamon, and cloves in whole milk.",
-      "modelUrl": "https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/coffeemat.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/tea/kulhad_filled_with_tea.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1728,7 +1728,7 @@
       "category": "beverages",
       "price": 89,
       "description": "Traditional South Indian filter coffee \u2014 decoction brewed with a chicory blend, served frothy in a steel tumbler.",
-      "modelUrl": "https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/coffeemat.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/coffee/coffee_cup.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1773,7 +1773,7 @@
       "category": "beverages",
       "price": 89,
       "description": "Chilled milk infused with rose syrup, topped with sabja seeds and crushed pistachios.",
-      "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/lime%20juice/lemonade__glass.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1817,7 +1817,7 @@
       "category": "beverages",
       "price": 69,
       "description": "Freshly squeezed lime with soda water, black salt, and cumin. Sweet or salted \u2014 your choice.",
-      "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/lime%20juice/lemonade__glass.glb",
       "imageUrl": null,
       "ingredients": [
         {
@@ -1869,7 +1869,7 @@
       "category": "beverages",
       "price": 179,
       "description": "Our house special \u2014 a layered blend of passion fruit, mango, pomegranate, and sparkling water with edible gold leaf.",
-      "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF-Binary/WaterBottle.glb",
+      "modelUrl": "https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/Drinks/lime%20juice/lemonade__glass.glb",
       "imageUrl": null,
       "ingredients": [
         {

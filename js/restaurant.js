@@ -28,19 +28,13 @@ export function renderRestaurantTour(container, onBackToMenu) {
                 </p>
             </div>
 
-            <!-- 3D Tour Viewer -->
-            <div class="tour-viewer">
-                <model-viewer
-                    src="https://raw.githubusercontent.com/ArtificialSoda/glTFmodels/main/Restaurant/Restaurant.glb"
-                    alt="Lumière restaurant interior"
-                    auto-rotate
-                    camera-controls
-                    shadow-intensity="0.6"
-                    environment-image="neutral"
-                    camera-orbit="45deg 60deg 150%"
-                    loading="lazy"
-                ></model-viewer>
-                <div class="tour-viewer__hint">Drag to explore · Pinch to zoom</div>
+            <!-- 360 Tour Viewer -->
+            <div class="tour-viewer" style="width: 100%; height: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15); margin-bottom: 32px; position: relative;">
+                <a-scene embedded style="width: 100%; height: 100%;">
+                    <a-sky src="assets/restaurant_panorama.jpg" rotation="0 -90 0"></a-sky>
+                    <a-camera look-controls="reverseMouseDrag: true"></a-camera>
+                </a-scene>
+                <div class="tour-viewer__hint" style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; pointer-events: none;">Drag to explore</div>
             </div>
 
             <!-- Hotspots -->
