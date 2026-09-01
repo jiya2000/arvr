@@ -30,11 +30,53 @@ export function renderRestaurantTour(container, onBackToMenu) {
 
             <!-- 360 Tour Viewer -->
             <div class="tour-viewer" style="width: 100%; height: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15); margin-bottom: 32px; position: relative;">
-                <a-scene embedded style="width: 100%; height: 100%;">
+                <a-scene embedded style="width: 100%; height: 100%;" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+                    <!-- Environment -->
                     <a-sky src="assets/restaurant_panorama.jpg" rotation="0 -90 0"></a-sky>
                     <a-camera look-controls="reverseMouseDrag: true"></a-camera>
+
+                    <!-- Spatial Lure Tag -->
+                    <a-entity 
+                        geometry="primitive: plane; width: 1.5; height: 0.5" 
+                        material="color: var(--primary); opacity: 0.8" 
+                        position="-2.5 0.8 -2.5" 
+                        look-at="[camera]" 
+                        class="clickable"
+                        id="tag-samosa">
+                        <a-text value="Tap for Chef's Special" align="center" color="#fff" width="4"></a-text>
+                    </a-entity>
                 </a-scene>
-                <div class="tour-viewer__hint" style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; pointer-events: none;">Drag to explore</div>
+                <div class="tour-viewer__hint" style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; pointer-events: none; z-index: 5;">Drag to explore</div>
+                
+                <!-- Overlay Lure Popup -->
+                <div id="lure-popup" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: var(--bg-card); padding: 24px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 280px; text-align: center; border: 1px solid var(--border);">
+                    <h3 id="lure-title" style="color: var(--primary); font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 8px;">House Special Samosa</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Crispy, golden pastry stuffed with spiced potatoes. Want to see it on your table?</p>
+                    <button class="btn btn--primary" id="lure-ar-btn" style="width: 100%; margin-bottom: 12px;">View Dish in AR</button>
+                    <button class="btn btn--secondary" id="lure-close-btn" style="width: 100%;">Close</button>
+                </div>
+
+                <!-- Overlay Model Viewer Modal -->
+                <div id="lure-model-modal" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background: rgba(250, 248, 245, 0.95); backdrop-filter: blur(10px);">
+                    <button id="close-model-btn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text);">✕</button>
+                    <model-viewer
+                        id="lure-model-viewer"
+                        src=""
+                        alt="3D dish"
+                        auto-rotate
+                        camera-controls
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        ar-scale="fixed"
+                        ar-placement="floor"
+                        shadow-intensity="1"
+                        style="width: 100%; height: 100%;"
+                    >
+                        <button slot="ar-button" class="btn btn--primary" style="position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);">
+                            View on your table
+                        </button>
+                    </model-viewer>
+                </div>
             </div>
 
             <!-- Hotspots -->
@@ -95,6 +137,44 @@ export function renderRestaurantTour(container, onBackToMenu) {
 
     // Back button
     container.querySelector('#tour-back-btn')?.addEventListener('click', onBackToMenu);
+
+    // Spatial Tag & Overlay Interactions
+    const tagSamosa = container.querySelector('#tag-samosa');
+    const lurePopup = container.querySelector('#lure-popup');
+    const lureCloseBtn = container.querySelector('#lure-close-btn');
+    const lureArBtn = container.querySelector('#lure-ar-btn');
+    
+    const lureModelModal = container.querySelector('#lure-model-modal');
+    const lureModelViewer = container.querySelector('#lure-model-viewer');
+    const closeModelBtn = container.querySelector('#close-model-btn');
+
+    if (tagSamosa) {
+        tagSamosa.addEventListener('click', () => {
+            lurePopup.style.display = 'block';
+        });
+    }
+
+    if (lureCloseBtn) {
+        lureCloseBtn.addEventListener('click', () => {
+            lurePopup.style.display = 'none';
+        });
+    }
+
+    if (lureArBtn) {
+        lureArBtn.addEventListener('click', () => {
+            lurePopup.style.display = 'none';
+            lureModelModal.style.display = 'block';
+            // Feed the authentic Indian model we mapped earlier
+            lureModelViewer.src = 'https://raw.githubusercontent.com/Kishore-s-19/MenuAR/main/menuar-backend/src/main/resources/static/models/appetizers/samosa/day_226_samosa.glb';
+            // Note: iOS Quick Look requires .usdz, but we'll stick to .glb for the prototype here.
+        });
+    }
+
+    if (closeModelBtn) {
+        closeModelBtn.addEventListener('click', () => {
+            lureModelModal.style.display = 'none';
+        });
+    }
 }
 
 function showReservation(container, table) {
