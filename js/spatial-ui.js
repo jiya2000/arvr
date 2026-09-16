@@ -2,20 +2,7 @@
 // Lumière — Custom A-Frame Components for Spatial UI
 // ============================================
 
-// Component to hide elements when entering AR (like the sky/background)
-AFRAME.registerComponent('hide-on-enter-ar', {
-    init: function () {
-        const el = this.el;
-        this.el.sceneEl.addEventListener('enter-vr', function () {
-            if (el.sceneEl.is('ar-mode')) {
-                el.setAttribute('visible', false);
-            }
-        });
-        this.el.sceneEl.addEventListener('exit-vr', function () {
-            el.setAttribute('visible', true);
-        });
-    }
-});
+// (hide-on-enter-ar is built into A-Frame, so we don't need to register it here)
 
 // Component to show elements only in VR/AR (like a gaze reticle)
 AFRAME.registerComponent('show-in-vr', {
@@ -131,7 +118,7 @@ AFRAME.registerComponent('dish-interactable', {
     }
 });
 
-// Spice Portal Component
+// Spice Portal Component (Triggers Mini-Game)
 AFRAME.registerComponent('spice-portal', {
     init: function () {
         const el = this.el;
@@ -146,15 +133,26 @@ AFRAME.registerComponent('spice-portal', {
                 easing: 'easeOutQuad'
             });
             
-            // Change environment sky to a different image (simulate walking into kitchen)
-            const sky = document.getElementById('sky-pano');
-            if(sky) {
-                // In a real app we would load a new pano, here we just tint it to simulate a change
-                sky.setAttribute('material', 'color', '#A45A3A');
-                setTimeout(() => {
-                    sky.setAttribute('material', 'color', '#FFF'); // Revert after a bit for demo
-                }, 5000);
+            // Trigger the AR game
+            const gameRig = document.getElementById('ar-game-rig');
+            if(gameRig) {
+                gameRig.emit('start-ingredient-rain');
             }
+        });
+    }
+});
+
+// Dynamic Environment Morphing Component
+AFRAME.registerComponent('dynamic-environment', {
+    init: function () {
+        const presets = ['default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'goldmine', 'threetowers', 'poison', 'arches', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris'];
+        
+        window.addEventListener('dish-selected', (e) => {
+            // Pick a random environment or one based on ID
+            const hash = e.detail.id.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            const preset = presets[hash % presets.length];
+            
+            this.el.setAttribute('environment', `preset: ${preset}; active: true; skyType: atmosphere; lighting: point`);
         });
     }
 });

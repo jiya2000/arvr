@@ -9,7 +9,7 @@ let menuData = null;
 let selectedDishId = null;
 
 // --- Boot ---
-document.addEventListener('DOMContentLoaded', async () => {
+async function boot() {
     try {
         const response = await fetch('./data/menu.json');
         menuData = await response.json();
@@ -22,7 +22,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error('Failed to initialize:', err);
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+} else {
+    boot();
+}
 
 function initSpatialMenu(items) {
     const carousel = document.getElementById('menu-carousel');
@@ -38,11 +44,7 @@ function initSpatialMenu(items) {
         dishEntity.setAttribute('dish-interactable', `dishId: ${item.id}`);
         dishEntity.setAttribute('scale', '1 1 1');
         
-        // Add particle system if it's a hot main dish
-        if (item.category === 'mains' && item.spiceLevel !== 'mild') {
-            dishEntity.setAttribute('particle-system', 'preset: snow; color: #ffffff; particleCount: 200; size: 0.1; velocityValue: 0 0.5 0; positionSpread: 0.5 0 0.5; maxAge: 1');
-            // We use snow preset tweaked to look a bit like steam/smoke rising slowly
-        }
+        // We removed the particle system due to incompatibility, so no steam for now
 
         carousel.components['dish-carousel'].addDish(dishEntity);
     });
@@ -63,7 +65,12 @@ function initHUDInteractions() {
     });
 
     explore3dBtn?.addEventListener('click', () => {
+        console.log('Explore 3D button clicked');
         introScreen.classList.remove('active');
+        // also set display none just to be safe
+        setTimeout(() => {
+            introScreen.style.display = 'none';
+        }, 500);
     });
 
     // Carousel Controls
@@ -101,9 +108,10 @@ function initHUDInteractions() {
                     name: dish.name,
                     totalPrice: dish.price,
                     spice: dish.spiceLevel,
-                    portion: 'regular'
+                    portion: 'regular',
+                    modelUrl: dish.modelUrl
                 });
-                showToast(`${dish.name} added to order!`);
+                showToast(`${dish.name} materialized in your Cart Tray!`);
                 document.getElementById('dish-info-panel').classList.remove('active');
             }
         }

@@ -6,25 +6,44 @@
     <meta name="description" content="Lumière — Immersive AR Dining Experience.">
     <meta name="theme-color" content="#29231F">
 
-    <title>Lumière — Immersive AR Dining</title>
+    <title>Lumière — Sensory Dining</title>
+    
+    <!-- ERROR LOGGER FOR DEBUGGING -->
+    <script>
+        window.addEventListener('error', function(e) {
+            const errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;background:red;color:white;padding:20px;font-family:monospace;width:100%;white-space:pre-wrap;';
+            errDiv.innerHTML = '<strong>GLOBAL ERROR:</strong><br>' + e.message + '<br>File: ' + e.filename + '<br>Line: ' + e.lineno;
+            if(document.body) document.body.appendChild(errDiv);
+            else window.onload = () => document.body.appendChild(errDiv);
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            const errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed;top:100px;left:0;z-index:99999;background:orange;color:white;padding:20px;font-family:monospace;width:100%;white-space:pre-wrap;';
+            errDiv.innerHTML = '<strong>UNHANDLED PROMISE REJECTION:</strong><br>' + (e.reason && e.reason.stack ? e.reason.stack : e.reason);
+            if(document.body) document.body.appendChild(errDiv);
+            else window.onload = () => document.body.appendChild(errDiv);
+        });
+    </script>
 
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- A-Frame -->
+    <!-- A-Frame and Extras -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+    
+    <!-- Custom Components -->
+    <script src="js/spatial-ui.js"></script>
+    <script src="js/ar-game.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
-    <!-- Particle System -->
-    <script src="https://unpkg.com/aframe-particle-system-component@1.1.3/dist/aframe-particle-system-component.min.js"></script>
 
     <!-- Google Model Viewer (Keep for QuickLook fallback) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
 
     <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- Custom Spatial UI Components -->
-    <script src="js/spatial-ui.js"></script>
 </head>
 <body>
 
@@ -79,11 +98,31 @@
             <!-- Models injected dynamically by app.js -->
         </a-assets>
 
-        <!-- Environment / Background -->
-        <a-entity id="environment-rig">
-            <a-sky id="sky-pano" src="#restaurant-pano" rotation="0 -90 0" radius="50" hide-on-enter-ar></a-sky>
-            <a-light type="ambient" color="#FFF" intensity="0.6"></a-light>
-            <a-light type="directional" position="-1 2 1" intensity="0.8" castShadow="true"></a-light>
+        <!-- Procedural Environment that morphs dynamically -->
+        <a-entity id="environment-rig" dynamic-environment environment="preset: default; skyType: atmosphere; lighting: point; active: true"></a-entity>
+
+        <!-- AR Mini-Game Rig -->
+        <a-entity id="ar-game-rig" ingredient-rain></a-entity>
+
+        <!-- Main Lighting (kept simple for performance) -->
+        <a-light type="ambient" color="#ffffff" intensity="0.6"></a-light>
+        <a-light type="directional" position="1 2 1" intensity="0.8" castShadow="true"></a-light>
+
+        <!-- Volumetric Cart Tray -->
+        <a-entity id="ar-cart-tray" position="1.5 1 -1.5" rotation="0 -30 0" shadow="receive: true">
+            <a-cylinder radius="0.8" height="0.05" color="#8b5a2b" material="roughness: 0.8"></a-cylinder>
+            <a-text value="Your Order" position="0 0.5 0" align="center" width="4" color="#ffffff"></a-text>
+            <a-text id="cart-total-3d" value="Total: $0.00" position="0 0.3 0" align="center" width="3" color="#ffaa00"></a-text>
+            
+            <!-- Action Buttons -->
+            <a-entity class="interactable" id="checkout-3d-btn" position="-0.4 0.1 0.6" geometry="primitive: box; width: 0.4; height: 0.1; depth: 0.2" material="color: #4CAF50" animation__hover="property: scale; to: 1.1 1.1 1.1; startEvents: mouseenter; dur: 200" animation__leave="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+                <a-text value="Checkout" position="0 0.06 0" rotation="-90 0 0" align="center" width="2" color="#FFF"></a-text>
+            </a-entity>
+            
+            <a-entity class="interactable" id="clear-3d-btn" position="0.4 0.1 0.6" geometry="primitive: box; width: 0.4; height: 0.1; depth: 0.2" material="color: #F44336" animation__hover="property: scale; to: 1.1 1.1 1.1; startEvents: mouseenter; dur: 200" animation__leave="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+                <a-text value="Clear" position="0 0.06 0" rotation="-90 0 0" align="center" width="2" color="#FFF"></a-text>
+            </a-entity>
+            <!-- Items will be spawned here as children -->
         </a-entity>
 
         <!-- Camera Rig -->
@@ -110,7 +149,6 @@
             <a-entity geometry="primitive: torus; radius: 0.8; tube: 0.05" material="color: #A45A3A; emissive: #A45A3A; emissiveIntensity: 0.5" animation="property: rotation; to: 0 0 360; loop: true; dur: 8000; easing: linear"></a-entity>
             <a-entity geometry="primitive: circle; radius: 0.75" material="color: #000; opacity: 0.8"></a-entity>
             <a-text value="Tap for\nSecret Menu" position="0 0 0.1" align="center" color="#FFF" scale="0.8 0.8 0.8"></a-text>
-            <a-entity particle-system="preset: dust; color: #ffeb99, #ff5e00; particleCount: 200; size: 0.5"></a-entity>
         </a-entity>
         
     </a-scene>
